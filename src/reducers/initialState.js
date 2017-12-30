@@ -10,4 +10,10 @@ export const initialState = {
     userType: userType.UNKNOWN,
     address: null,
   },
+  price: {
+    blockNum: -1,
+    txHash: null,
+    numerator: null,
+    denominator: null,
+  }
 }

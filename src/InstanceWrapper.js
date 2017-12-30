@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { PropTypes } from 'prop-types'
 import getC20Instance from './utils/getC20Instance'
 import { connect } from 'react-redux'
-// import { } from './actions'
+import { priceUpdate } from './actions'
 
 class InstanceWrapper extends Component {
   constructor(props) {
@@ -28,22 +28,35 @@ class InstanceWrapper extends Component {
         })
       )
 
+      /////
       // set up listeners on the contract.
+      /////
+      const latestBlock = result.web3.eth.getBlock('latest')
+      // -800 blocks should be more than 2 hours ago, no need to go further in history.
+      const startMonitorBlock = Math.max(0, latestBlock - 800)
       result.c20Instance.PriceUpdate(
-        {}, { fromBlock: 0, toBlock: 'latest' }
+        {}, { fromBlock: startMonitorBlock, toBlock: 'latest' }
       ).watch ( (err, response) => {
-        console.log('EVENT LOG(LogTollBoothOperatorCreated):', response)
-        console.log('EVENT LOG(LogTollBoothOperatorCreated):', response.args)
-
         const {
+          transactionHash,
+          blockNumber,
+          args: {
+            numerator,
+            denominator,
+          }
+        } = response
+
+        console.log('EVENT LOG(PriceUpdate):', {
+          numerator: numerator.toString(),
+          denominator: denominator.toString(),
+        })
+
+        this.props.dispatch(priceUpdate(
           numerator,
           denominator,
-        } = response.args
-
-        // this.props.dispatch(priceUpdate(
-        //   numerator,
-        //   denominator,
-        // ))
+          transactionHash,
+          blockNumber,
+        ))
       })
     })
   }
