@@ -19,7 +19,7 @@ const PriceUpdateStatus = () =>
     <div className="col-xs-12">
       <h6>NEXT C20 PRICE UPDATE: <small>(UPDATED HOURLY)</small></h6>
       <div className="progress" style={{backgroundColor: '#f5f5f5', margin: '10px 0'}}>
-        <div className="progress-bar" data-original-title="55 Minutes Till Next C20 Price Update" data-placement="top" data-toggle="tooltip" role="progressbar" style={{width: '91.66666%', backgroundColor: '#003049'}} title>55 Mins</div>
+        <div className="progress-bar" data-original-title="55 Minutes Till Next C20 Price Update" data-placement="top" data-toggle="tooltip" role="progressbar" style={{width: '91.66666%', backgroundColor: '#003049'}}>55 Mins</div>
       </div>
     </div>
   </div>
