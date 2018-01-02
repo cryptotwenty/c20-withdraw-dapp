@@ -8,7 +8,9 @@ export const initialState = {
   user: {
     loaded: false,
     userType: userType.UNKNOWN,
-    address: null,
+    address: "0x0000000000000000000000000000000000000000",
+    balance: null,
+    isVerified: false,
   },
   price: {
     blockNum: -1,

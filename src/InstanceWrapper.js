@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { PropTypes } from 'prop-types'
 import getC20Instance from './utils/getC20Instance'
 import { connect } from 'react-redux'
-import { priceUpdate } from './actions'
+import { priceUpdate, loadUser } from './actions'
 
 class InstanceWrapper extends Component {
   constructor(props) {
@@ -27,6 +27,11 @@ class InstanceWrapper extends Component {
           c20Instance: result.c20Instance,
         })
       )
+
+      /////
+      // Load the users data:
+      /////
+      this.props.dispatch(loadUser(result.c20Instance, result.web3, result.accounts))
 
       /////
       // set up listeners on the contract.

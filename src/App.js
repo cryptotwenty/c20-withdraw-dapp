@@ -1,4 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import Identicon from './components/Identicon'
 
 const TopBar = () =>
   <div className="row">
@@ -8,7 +11,7 @@ const TopBar = () =>
     </div>
     <div className="col-xs-8 text-right">
       <div className="updated">updated 5 minutes ago..</div>
-      <div className="price-big crypto20">$19.857</div>
+      <div className="price-big crypto20"></div>
       <div className="crypto20"><img alt="C20 Icon" className="ccc" src="https://static.crypto20.com/images/icons/c20-alt-2-darkblue.png" />82,245,015 <small>IN CIRCULATION</small></div>
       <div className="crypto20">$1,593,345,017.84 <small>MARKET CAP</small></div>
     </div>
@@ -24,17 +27,12 @@ const PriceUpdateStatus = () =>
     </div>
   </div>
 
-const Body = () =>
+const Body = ({user}) =>
   <div className="row">
     <div className="row">
       <div className="col-sm-12">
-        <h4>Withdraw ETH for C20:</h4>
-        <h6>Choose your connected ETH address</h6>
-        <select className="form-control" id="ethAddress" style={{height: 48}}>
-          <option>0x0000000000000000000000000000000000000000</option>
-          <option>0x0000000000000000000000000000000000000000</option>
-          <option>0x0000000000000000000000000000000000000000</option>
-        </select>
+        <h4>Your C20 Eth address:</h4>
+        <p><Identicon diameter={60} address={user.address} />{user.address}</p>
       </div>
     </div>
     <div className="row">
@@ -91,7 +89,7 @@ class App extends Component {
               <div className="row">
                 <TopBar/>
                 <PriceUpdateStatus/>
-                <Body/>
+                <Body user={this.props.user}/>
               </div>
             </div>
           </div>
@@ -101,4 +99,16 @@ class App extends Component {
   }
 }
 
-export default App;
+App.contextTypes = {
+  instanceLoaded: PropTypes.bool,
+  accounts: PropTypes.array,
+  web3: PropTypes.object,
+  c20Instance: PropTypes.object,
+}
+
+const mapStateToProps = state => ({
+  user: state.user,
+  price: state.price,
+})
+
+export default connect(mapStateToProps)(App)
