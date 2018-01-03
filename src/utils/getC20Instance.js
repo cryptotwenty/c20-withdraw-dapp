@@ -34,7 +34,7 @@ const getC20Instance = () => new Promise((resolve, reject) => {
 
     web3RPC.eth.getAccounts((error, accounts) => {
       result.accounts = accounts
-      return regulator.at('0x604804989F6A9e4683ae2083dF2A00961AEEd904').then((c20Instance) => {
+      return regulator.at('0x2f412497f4ec98b22c7e886af252321b01e0447b').then((c20Instance) => {
         result.c20Instance = c20Instance
         resolve(result)
       })

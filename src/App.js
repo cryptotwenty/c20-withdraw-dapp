@@ -32,7 +32,10 @@ const Body = ({user}) =>
     <div className="row">
       <div className="col-sm-12">
         <h4>Your C20 Eth address:</h4>
-        <p><Identicon diameter={60} address={user.address} />{user.address}</p>
+        <div style={{display: 'flex', 'flex-direction': 'row'}}>
+          <Identicon diameter={60} address={user.address} />
+          <h5 style={{'padding-left':'2em'}}>{user.address}</h5>
+        </div>
       </div>
     </div>
     <div className="row">
@@ -46,7 +49,9 @@ const Body = ({user}) =>
             <tr>
             <th colSpan={2}>Totals:</th>
             </tr><tr><td>C20 Total:</td><td>
-            <img alt="C20 Icon" className="ccc" src="https://static.crypto20.com/images/icons/c20-alt-2-darkblue.png" />3489</td></tr><tr>
+            <img alt="C20 Icon" className="ccc" src="https://static.crypto20.com/images/icons/c20-alt-2-darkblue.png" />
+              {user.balance.tokens.loaded ? user.balance.tokens.displayBalance : 'loading (TODO:: ADD LOAD SPINNER)'}
+            </td></tr><tr>
             <td>Equivalent ETH:</td><td><i className="cc ETH" /> 227.79681</td>
             </tr><tr><td>Equivalent USD:</td>
             <td><i className="fa fa-dollar" /> 68,339.043</td>
