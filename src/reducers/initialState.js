@@ -66,5 +66,9 @@ export const initialState = {
         denominator: null,
       }
     }
+  },
+  updateTicker: {
+    minute: -1,
+    // lastUpdateTime: 0,
   }
 }

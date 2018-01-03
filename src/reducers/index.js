@@ -80,6 +80,34 @@ const reducer = (state = initialState, action) => {
               blockNum: action.blockNum,
             }
           }
+        },
+        updateTicker: {
+          ...state.updateTicker,
+
+        }
+      }
+    case actions.UPDATE_MINUTE:
+      const inSync = (state.updateTicker.minute%60) == action.minute
+      const increment = inSync ? 0 : 1
+      let minute
+      if (action.wasUpdate){
+        if (action.minute > 57) {
+          minute = action.minute - 60
+        } else {
+          minute = action.minute
+        }
+      } else {
+        minute = Math.min(60, state.updateTicker.minute + increment)
+      }
+
+      if (((minute+60)%60) !== action.minute && minute != 60) // this means it is comletely out of sync (ie when it starts up)
+        minute = action.minute
+
+      return {
+        ...state,
+        updateTicker: {
+          ...state.updateTicker,
+          minute,
         }
       }
     default:

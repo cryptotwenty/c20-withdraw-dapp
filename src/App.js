@@ -33,12 +33,17 @@ const TopBar = ({price}) =>{
   )
 }
 
-const PriceUpdateStatus = () =>
+const PriceUpdateStatus = ({updateTicker}) =>
   <div className="row">
     <div className="col-xs-12">
       <h6>NEXT C20 PRICE UPDATE: <small>(UPDATED HOURLY)</small></h6>
       <div className="progress" style={{backgroundColor: '#f5f5f5', margin: '10px 0'}}>
-        <div className="progress-bar" data-original-title="55 Minutes Till Next C20 Price Update" data-placement="top" data-toggle="tooltip" role="progressbar" style={{width: '91.66666%', backgroundColor: '#003049'}}>55 Mins</div>
+        {updateTicker.minute == 60 ?
+          <div className="progress-bar" data-original-title="Pending update, waiting for confirmation from Ethereum." data-placement="top" data-toggle="tooltip" role="progressbar" style={{width: '100%', backgroundColor: '#003049'}}>Pending update, waiting for confirmation from Ethereum.</div>
+          : <div className="progress-bar" data-original-title={updateTicker.minute + "Minutes Till Next C20 Price Update"} data-placement="top" data-toggle="tooltip" role="progressbar" style={{width: 100*Math.max(0, updateTicker.minute)/60  + '%', backgroundColor: '#003049'}}>
+              {60 - updateTicker.minute} Mins left
+            </div>
+        }
       </div>
     </div>
   </div>
@@ -94,7 +99,7 @@ class App extends Component {
             <div className="col-sm-12 col-md-12">
               <div className="row">
                 <TopBar price={this.props.price}/>
-                <PriceUpdateStatus/>
+                <PriceUpdateStatus updateTicker={this.props.updateTicker}/>
                 <Body user={this.props.user} price={this.props.price}/>
               </div>
             </div>
@@ -115,6 +120,7 @@ App.contextTypes = {
 const mapStateToProps = state => ({
   user: state.user,
   price: state.price,
+  updateTicker: state.updateTicker,
 })
 
 export default connect(mapStateToProps)(App)

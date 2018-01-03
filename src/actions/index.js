@@ -5,27 +5,49 @@ export const actions = {
   SAVE_ETHER_PRICE: 'SAVE_ETHER_PRICE',
   SAVE_USER_BALANCE: 'SAVE_USER_BALANCE',
   SAVE_USER: 'SAVE_USER',
+  UPDATE_MINUTE: 'UPDATE_MINUTE',
 }
 
 // TODO:: remove txHash, it serves no purpose
-export const priceUpdate = (numerator, denominator, txHash, blockNum) => ({
-  type: actions.UPDATE_PRICE,
-  numerator,
-  denominator,
-  txHash,
-  blockNum,
+export const priceUpdate = (numerator, denominator, txHash, blockNum) => dispatch => {
+  dispatch({
+    type: actions.UPDATE_PRICE,
+    numerator,
+    denominator,
+    txHash,
+    blockNum,
+  })
+  dispatch(updateCountdownTimer(true))
+}
+
+
+export const loadInitialPrice = (c20Instance, accounts) => async dispatch => {
+  const currentPrice = await c20Instance.currentPrice()
+
+  console.log(currentPrice)
+
+  dispatch({
+    type: actions.UPDATE_PRICE,
+    numerator: currentPrice[0],
+    denominator: currentPrice[1],
+    blockNum: 1, // default to 1 since only blocktime is accessible
+  })
+}
+
+export const updateCountdownTimer = (wasUpdate = false) => ({
+  type: actions.UPDATE_MINUTE,
+  minute: (new Date().getMinutes()),
+  wasUpdate,
 })
 
 
-export const loadInitialPrice = (c20Instance, web3, accounts) => async dispatch => {
-  // const previousUpdateTime = await c20Instance.previousUpdateTime()
-  const currentPrice = await c20Instance.currentPrice()
+// NOTE:: Unused, not needed
+export const updateUpdateTime = (c20Instance, accounts) => async dispatch => {
+  const previousUpdateTime = await c20Instance.previousUpdateTime()
 
   return {
-    type: actions.UPDATE_PRICE,
-    numerator: currentPrice.numerator,
-    denominator: currentPrice.denominator,
-    blockNum: 1, // default to 1 since blocktime is not accessible
+    type: actions.UPDATE_UPDATE_TIME,
+    previousUpdateTime,
   }
 }
 
