@@ -2,20 +2,36 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import Identicon from './components/Identicon'
+import PriceTable from './components/PriceTable'
 
-const TopBar = () =>
-  <div className="row">
-    <div className="col-xs-4">
-      <h4 className="name">CRYPTO20</h4>
-      <img alt="C20 Icon" className="c20-icon" src="https://static.crypto20.com/images/icons/c20-alt-2-darkblue.png" />
+const TopBar = ({price}) =>{
+  const {
+    tokens: {
+      fund
+    },
+    ether
+  } = price
+
+  // TODO:: get this from their api
+  const totalSupply = 40630596.65
+  const marketCap = (totalSupply / fund.tokensPerEther) * ether.price
+  const updatedTime = Math.floor(((new Date().getTime()/1000) - ether.last_updated)/60)
+
+  return (
+    <div className="row">
+      <div className="col-xs-4">
+        <h4 className="name">CRYPTO20</h4>
+        <img alt="C20 Icon" className="c20-icon" src="https://static.crypto20.com/images/icons/c20-alt-2-darkblue.png" />
+      </div>
+      <div className="col-xs-8 text-right">
+        <div className="updated">updated {updatedTime} minutes ago..</div>
+        <div className="price-big crypto20"></div>
+        <div className="crypto20"><img alt="C20 Icon" className="ccc" src="https://static.crypto20.com/images/icons/c20-alt-2-darkblue.png" />{totalSupply}<small>IN CIRCULATION</small></div>
+        <div className="crypto20">${marketCap}<small>MARKET CAP</small></div>
+      </div>
     </div>
-    <div className="col-xs-8 text-right">
-      <div className="updated">updated 5 minutes ago..</div>
-      <div className="price-big crypto20"></div>
-      <div className="crypto20"><img alt="C20 Icon" className="ccc" src="https://static.crypto20.com/images/icons/c20-alt-2-darkblue.png" />82,245,015 <small>IN CIRCULATION</small></div>
-      <div className="crypto20">$1,593,345,017.84 <small>MARKET CAP</small></div>
-    </div>
-  </div>
+  )
+}
 
 const PriceUpdateStatus = () =>
   <div className="row">
@@ -27,14 +43,14 @@ const PriceUpdateStatus = () =>
     </div>
   </div>
 
-const Body = ({user}) =>
+const Body = ({user, price}) =>
   <div className="row">
     <div className="row">
       <div className="col-sm-12">
         <h4>Your C20 Eth address:</h4>
-        <div style={{display: 'flex', 'flex-direction': 'row'}}>
+        <div style={{display: 'flex', flexDirection: 'row'}}>
           <Identicon diameter={60} address={user.address} />
-          <h5 style={{'padding-left':'2em'}}>{user.address}</h5>
+          <h5 style={{paddinLeft: '2em'}}>{user.address}</h5>
         </div>
       </div>
     </div>
@@ -42,29 +58,14 @@ const Body = ({user}) =>
       <div className="col-xxs-6 col-xxs-push-3 col-xs-4 col-xs-push-0">
         <img alt="C20 Icon" className="img-responsive" src="https://static.crypto20.com/images/logos/metamask.png" />
       </div>
-      <div className="col-xxs-12 col-xs-8">
-        <div className="table-responsive">
-          <table className="table table-bordered table-invested">
-            <tbody>
+      <PriceTable price={price}/>
+    </div>
+    <div className="row"><div className="col-sm-12"><h6 style={{marginTop: 0}}>CHOOSE C20 WITHDRAWAL AMOUNT:</h6>
+      <div className="table-responsive">
+        <table className="table table-bordered table-invested">
+          <tbody>
             <tr>
-            <th colSpan={2}>Totals:</th>
-            </tr><tr><td>C20 Total:</td><td>
-            <img alt="C20 Icon" className="ccc" src="https://static.crypto20.com/images/icons/c20-alt-2-darkblue.png" />
-              {user.balance.tokens.loaded ? user.balance.tokens.displayBalance : 'loading (TODO:: ADD LOAD SPINNER)'}
-            </td></tr><tr>
-            <td>Equivalent ETH:</td><td><i className="cc ETH" /> 227.79681</td>
-            </tr><tr><td>Equivalent USD:</td>
-            <td><i className="fa fa-dollar" /> 68,339.043</td>
-            </tr></tbody></table>
-            </div>
-            </div>
-            </div>
-            <div className="row"><div className="col-sm-12"><h6 style={{marginTop: 0}}>CHOOSE C20 WITHDRAWAL AMOUNT:</h6>
-            <div className="table-responsive">
-            <table className="table table-bordered table-invested">
-            <tbody>
-            <tr>
-            <td colSpan={3} style={{whiteSpace: 'normal'}}>For 200 C20, you will receive 12.826 ETH. Click withdraw to confirm.</td>
+              <td colSpan={3} style={{whiteSpace: 'normal'}}>For 200 C20, you will receive 12.826 ETH. Click withdraw to confirm.</td>
             </tr>
             <tr>
             <td colSpan={3}>
@@ -73,13 +74,13 @@ const Body = ({user}) =>
             </td>
             </tr>
             <tr><td>
-            <img alt="C20 Icon" className="ccc" src="https://static.crypto20.com/images/icons/c20-alt-2-darkblue.png" />200</td>
+              <img alt="C20 Icon" className="ccc" src="https://static.crypto20.com/images/icons/c20-alt-2-darkblue.png" />200</td>
             <td><i className="cc ETH" /> 12.826</td><td><i className="fa fa-dollar" /> 3,846</td>
             </tr>
-            </tbody>
-          </table>
-        </div>
+          </tbody>
+        </table>
       </div>
+    </div>
     </div>
   </div>
 
@@ -92,9 +93,9 @@ class App extends Component {
           <div className="row">
             <div className="col-sm-12 col-md-12">
               <div className="row">
-                <TopBar/>
+                <TopBar price={this.props.price}/>
                 <PriceUpdateStatus/>
-                <Body user={this.props.user}/>
+                <Body user={this.props.user} price={this.props.price}/>
               </div>
             </div>
           </div>

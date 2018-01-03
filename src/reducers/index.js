@@ -5,7 +5,6 @@ import {
   initialState,
   userType,
 } from './initialState'
-import BigNumber from 'bignumber.js'
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -23,11 +22,12 @@ const reducer = (state = initialState, action) => {
       let displayBalance = action.precisionBalance.div('1000000000000000000').toNumber()
       return {
         ...state,
-        user: {
-          ...state.user,
-          balance: {
-            ...state.user.balance,
-            tokens: {
+        price: {
+          ...state.price,
+          tokens: {
+            ...state.price.tokens,
+            user: {
+              ...state.price.tokens.user,
               loaded: true,
               displayBalance,
               balanceWeiBN: action.precisionBalance,
@@ -35,17 +35,51 @@ const reducer = (state = initialState, action) => {
           }
         }
       }
-    case actions.UPDATE_PRICE:
-      if (action.blockNum < state.price.blockNum)
-        return state
+    case actions.SAVE_ETHER_PRICE:
+      const {
+        wasError,
+        price,
+        price_btc,
+        last_updated,
+      } = action
+      if (wasError) return {
+        errorMessage: 'Error: the coinmarketcap.com service is unavailable.'
+      }
 
       return {
         ...state,
         price: {
-          numerator: action.numerator,
-          denominator: action.denominator,
-          txHash: action.txHash,
-          blockNum: action.blockNum,
+          ...state.price,
+          ether: {
+            ...state.price.ether,
+            price,
+            price_btc,
+            last_updated,
+            errorMessage: "",
+          }
+        }
+      }
+    case actions.UPDATE_PRICE:
+      if (action.blockNum < state.price.blockNum)
+        return state
+
+      const tokensPerEther = action.numerator.div(action.denominator).toNumber()
+
+      return {
+        ...state,
+        price: {
+          ...state.price,
+          tokens: {
+            ...state.price.tokens,
+            fund: {
+              ...state.price.tokens.fund,
+              numerator: action.numerator,
+              denominator: action.denominator,
+              tokensPerEther,
+              txHash: action.txHash,
+              blockNum: action.blockNum,
+            }
+          }
         }
       }
     default:

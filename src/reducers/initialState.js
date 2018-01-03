@@ -38,33 +38,33 @@ export const currency = {
   ZAR: "ZAR"
 }
 
-export const balanceTemplate = {
-  etherPrice: {
-    loaded: false,
-    timeLoaded: null,
-    displayCurrency: currency.USD,
-    exchange: null
-  },
-  tokens: {
-    loaded: false,
-    displayBalance: null,
-    balanceWeiBN: null
-  }
-}
-
 export const initialState = {
   user: {
     loaded: false,
     userType: userType.UNKNOWN,
     address: "0x0000000000000000000000000000000000000000",
-    balance: balanceTemplate,
     isVerified: false,
   },
-  other: 'testing 123',
   price: {
-    blockNum: -1,
-    txHash: null,
-    numerator: null,
-    denominator: null,
+    ether: {
+      last_updated: -1,
+      displayCurrency: currency.USD,
+      price: null,
+      price_btc: null,
+      errorMessage: ''
+    },
+    tokens: {
+      user: {
+        loaded: false,
+        displayBalance: null,
+        balanceWeiBN: null
+      },
+      fund: {
+        blockNum: -1,
+        txHash: null,
+        numerator: null,
+        denominator: null,
+      }
+    }
   }
 }
