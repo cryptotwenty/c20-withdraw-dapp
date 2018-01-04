@@ -38,6 +38,13 @@ export const currency = {
   ZAR: "ZAR"
 }
 
+export const txState = {
+  NONE: 'NONE',
+  INIT: 'INIT',
+  SUBMIT: 'SUBMIT',
+  COMPLETE: 'COMPLETE',
+}
+
 export const initialState = {
   user: {
     loaded: false,
@@ -70,5 +77,12 @@ export const initialState = {
   updateTicker: {
     minute: -1,
     // lastUpdateTime: 0,
+  },
+  transactions: {
+    request: {
+      state: txState.NONE,
+      txHash: ''
+      // TODO:: Put more info about the transaction here (for ui and info purposes)
+    }
   }
 }

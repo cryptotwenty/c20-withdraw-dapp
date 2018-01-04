@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { withFormik } from 'formik'
 import Yup from 'yup'
+import { requestWithdraw } from '../actions'
+import { txState } from '../reducers/initialState'
 import './toggle.css'
 
 // Our inner form component. Will be wrapped with Formik({..})
@@ -122,7 +124,7 @@ class RequestWithdraw extends Component {
       if (arg.fullAmount) {
         amountToRequest = this.props.price.tokens.user.balanceWeiBN
       }
-      // this.props.dispatch()
+      this.props.dispatch(requestWithdraw(this.context.c20Instance, this.context.web3, this.context.accounts, amountToRequest))
     }
 
     const formProps = {
@@ -132,14 +134,44 @@ class RequestWithdraw extends Component {
       price: this.props.price,
     }
     const special = thingToPrint => console.log(thingToPrint)
-    return (
-      <div className="col-sm-12">
-        <h6 style={{marginTop: 0}}>CHOOSE C20 WITHDRAWAL AMOUNT:</h6>
-        <div className="table-responsive">
-            <EnhancedForm tokenAmount={10} {...formProps} withdrawFunc={withdrawFunc}/>
-        </div>
-      </div>
-    )
+
+    // TODO:: ui: keep the background the submit screen and put text over it as an overlay.
+    switch(this.props.requestTx.state){
+      case txState.NONE:
+        return (
+          <div className="col-sm-12">
+            <h6 style={{marginTop: 0}}>CHOOSE C20 WITHDRAWAL AMOUNT:</h6>
+            <div className="table-responsive">
+              <EnhancedForm tokenAmount={10} {...formProps} withdrawFunc={withdrawFunc}/>
+            </div>
+          </div>
+        )
+      case txState.INIT:
+        // TODO:: add message and button about reloading if user rejects in metamask
+        return (
+          <div className="col-sm-12">
+            <h6>Creating transaction and sending to the Ethereum Network.</h6>
+          </div>
+        )
+      case txState.SUBMIT:
+        return (
+          <div className="col-sm-12">
+            <h6>Waiting for transaction to be mined Ethereum Network.</h6>
+            <h6>View transaction on <a href={'https://etherscan.io/tx/' + this.props.requestTx.txHash} target="_blank">etherscan.io:</a></h6>
+          </div>
+        )
+      case txState.COMPLETE:
+        // TODO:: Add timer
+        return (
+          <div className="col-sm-12">
+            <h6>Transaction has been Mined.</h6>
+            <h6>Wait for next price update to withdraw your ether.</h6>
+            <h6>View transaction on <a href={'https://etherscan.io/tx/' + this.props.requestTx.txHash} target="_blank">etherscan.io:</a></h6>
+          </div>
+        )
+      default:
+        return null
+    }
   }
 }
 
@@ -154,6 +186,7 @@ const mapStateToProps = state => ({
   user: state.user,
   price: state.price,
   updateTicker: state.updateTicker,
+  requestTx: state.transactions.request,
 })
 
 export default connect(mapStateToProps)(RequestWithdraw)

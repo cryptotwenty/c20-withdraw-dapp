@@ -1,6 +1,7 @@
 import Web3 from 'web3'
 import C20Contract from '../../build/contracts/C20.json'
 import Config from '../../truffle.js'
+import getTransactionReceiptMined from '../utils/getTransactionReceiptMined.js'
 
 const getC20Instance = () => new Promise((resolve, reject) => {
   // Wait for loading completion to avoid race conditions with web3 injection timing.
@@ -26,6 +27,7 @@ const getC20Instance = () => new Promise((resolve, reject) => {
     result = {
       web3: web3
     }
+    result.web3.eth.getTransactionReceiptMined = getTransactionReceiptMined
     const contract = require('truffle-contract')
     const regulator = contract(C20Contract)
     regulator.setProvider(provider)

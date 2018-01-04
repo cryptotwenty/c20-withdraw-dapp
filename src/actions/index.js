@@ -1,4 +1,7 @@
 import request from 'request'
+import BigNumber from 'bignumber.js'
+
+const pow18 = new BigNumber('1000000000000000000')
 
 export const actions = {
   UPDATE_PRICE: 'UPDATE_PRICE',
@@ -6,6 +9,9 @@ export const actions = {
   SAVE_USER_BALANCE: 'SAVE_USER_BALANCE',
   SAVE_USER: 'SAVE_USER',
   UPDATE_MINUTE: 'UPDATE_MINUTE',
+  INIT_REQUEST: 'INIT_REQUEST',
+  SUBMIT_REQUEST: 'SUBMIT_REQUEST',
+  COMPLETE_REQUEST: 'COMPLETE_REQUEST',
 }
 
 // TODO:: remove txHash, it serves no purpose
@@ -23,8 +29,6 @@ export const priceUpdate = (numerator, denominator, txHash, blockNum) => dispatc
 
 export const loadInitialPrice = (c20Instance, accounts) => async dispatch => {
   const currentPrice = await c20Instance.currentPrice()
-
-  console.log(currentPrice)
 
   dispatch({
     type: actions.UPDATE_PRICE,
@@ -93,3 +97,22 @@ export const getEtherPrice = displayCurrency => dispatch =>
       last_updated: priceObj[0].last_updated,
     })
   })
+
+export const requestWithdraw = (c20Instance, web3, accounts, tokensToWithdraw) => async dispatch => {
+  dispatch({
+    type: actions.INIT_REQUEST
+  })
+
+  const tx = await c20Instance.transfer.sendTransaction('0x788a601b5eaa00a8b0bfd91d90e65ea1567ce6af', pow18.mul(tokensToWithdraw), {from: accounts[0]})
+  // const tx = await c20Instance.requestWithdrawal.sendTransaction(tokensToWithdraw, {from: accounts[0]})
+  dispatch({
+    type: actions.SUBMIT_REQUEST,
+    tx: tx.tx
+  })
+
+  const mined = await web3.eth.getTransactionReceiptMined(tx)
+  dispatch({
+    type: actions.COMPLETE_REQUEST,
+    mined
+  })
+}
