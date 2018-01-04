@@ -1,8 +1,12 @@
+// TODO:: break this file up into smaller pieces for each component. Keep it manageable.
+
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import Identicon from './components/Identicon'
 import PriceTable from './components/PriceTable'
+import Withdraw from './Containers/Withdraw.js'
+import RequestWithdraw from './Containers/RequestWithdraw.js'
 
 const TopBar = ({price}) =>{
   const {
@@ -65,62 +69,43 @@ const Body = ({user, price}) =>
       </div>
       <PriceTable price={price}/>
     </div>
-    <div className="row"><div className="col-sm-12"><h6 style={{marginTop: 0}}>CHOOSE C20 WITHDRAWAL AMOUNT:</h6>
-      <div className="table-responsive">
-        <table className="table table-bordered table-invested">
-          <tbody>
-            <tr>
-              <td colSpan={3} style={{whiteSpace: 'normal'}}>For 200 C20, you will receive 12.826 ETH. Click withdraw to confirm.</td>
-            </tr>
-            <tr>
-            <td colSpan={3}>
-            <input className="input-c20 form-control" id="tokenAmount" style={{marginBottom: 10, width: '100%'}} defaultValue={200} type="text" />
-            <a className="btn btn-withdraw btn-primary" id="withdrawC20"><i className="fa fa-send" /> Withdraw</a>
-            </td>
-            </tr>
-            <tr><td>
-              <img alt="C20 Icon" className="ccc" src="https://static.crypto20.com/images/icons/c20-alt-2-darkblue.png" />200</td>
-            <td><i className="cc ETH" /> 12.826</td><td><i className="fa fa-dollar" /> 3,846</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <div className="row">
+      <RequestWithdraw/>
     </div>
   </div>
 
-class App extends Component {
-  render() {
-    return (
-      <div className="col-xs-12 col-sm-12 col-lg-8 col-lg-push-2">
-        <div className="panel">
-        <div className="panel-footer">
-          <div className="row">
-            <div className="col-sm-12 col-md-12">
-              <div className="row">
-                <TopBar price={this.props.price}/>
-                <PriceUpdateStatus updateTicker={this.props.updateTicker}/>
-                <Body user={this.props.user} price={this.props.price}/>
+  class App extends Component {
+    render() {
+      return (
+        <div className="col-xs-12 col-sm-12 col-lg-8 col-lg-push-2">
+          <div className="panel">
+          <div className="panel-footer">
+            <div className="row">
+              <div className="col-sm-12 col-md-12">
+                <div className="row">
+                  <TopBar price={this.props.price}/>
+                  <PriceUpdateStatus updateTicker={this.props.updateTicker}/>
+                  <Body user={this.props.user} price={this.props.price}/>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>)
+      </div>)
+    }
   }
-}
 
-App.contextTypes = {
-  instanceLoaded: PropTypes.bool,
-  accounts: PropTypes.array,
-  web3: PropTypes.object,
-  c20Instance: PropTypes.object,
-}
+  App.contextTypes = {
+    instanceLoaded: PropTypes.bool,
+    accounts: PropTypes.array,
+    web3: PropTypes.object,
+    c20Instance: PropTypes.object,
+  }
 
-const mapStateToProps = state => ({
-  user: state.user,
-  price: state.price,
-  updateTicker: state.updateTicker,
-})
+  const mapStateToProps = state => ({
+    user: state.user,
+    price: state.price,
+    updateTicker: state.updateTicker,
+  })
 
-export default connect(mapStateToProps)(App)
+  export default connect(mapStateToProps)(App)
