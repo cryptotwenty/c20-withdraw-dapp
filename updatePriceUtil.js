@@ -21,7 +21,7 @@ web3RPC.eth.getAccounts((error, accounts) => {
 
   c20.deployed()
   .then((c20Instance) => {
-    c20Instance.updatePrice(1, {from: accounts[0]}).then(
+    c20Instance.updatePrice(300000, {from: accounts[0]}).then(
       console.log('priceIsUpdated')
     )
   }).catch(err => console.log(err))

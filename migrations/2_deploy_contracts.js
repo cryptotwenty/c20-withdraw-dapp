@@ -63,11 +63,11 @@ module.exports = (deployer, network, accounts) => {
         return Promise.all(
           [
             c20Instance.setVestingContract(vestingInstance.address, {from: fundWallet}),
-            c20Instance.verifyParticipant(user1, {from: fundWallet}),
-            c20Instance.verifyParticipant(user2, {from: fundWallet}),
-            c20Instance.verifyParticipant(user3, {from: fundWallet}),
-            c20Instance.verifyParticipant(user4, {from: fundWallet}),
-            c20Instance.verifyParticipant(user5, {from: fundWallet}),
+            // c20Instance.verifyParticipant(user1, {from: fundWallet}),
+            // c20Instance.verifyParticipant(user2, {from: fundWallet}),
+            // c20Instance.verifyParticipant(user3, {from: fundWallet}),
+            // c20Instance.verifyParticipant(user4, {from: fundWallet}),
+            // c20Instance.verifyParticipant(user5, {from: fundWallet}),
           ]
         )
       })
@@ -75,15 +75,15 @@ module.exports = (deployer, network, accounts) => {
       .then(
         () => {
           console.log('all participants verified')
-          return Promise.all([
-            c20Instance.allocatePresaleTokens(user1, 9007199254740991, {from: fundWallet}),
-            c20Instance.allocatePresaleTokens(user2, 9007199254740991, {from: fundWallet}),
-            c20Instance.allocatePresaleTokens(user3, 9007199254740991, {from: fundWallet}),
-            c20Instance.allocatePresaleTokens(user4, 9007199254740991, {from: fundWallet}),
-            c20Instance.allocatePresaleTokens(user5, 9007199254740991, {from: fundWallet}),
-          ])
+          // return Promise.all([
+            // return c20Instance.allocatePresaleTokens(user1, 9007199254740991, {from: fundWallet})
+            // c20Instance.allocatePresaleTokens(user2, 9007199254740991, {from: fundWallet}),
+            // c20Instance.allocatePresaleTokens(user3, 9007199254740991, {from: fundWallet}),
+            // c20Instance.allocatePresaleTokens(user4, 9007199254740991, {from: fundWallet}),
+            // c20Instance.allocatePresaleTokens(user5, 9007199254740991, {from: fundWallet}),
+          // ])
         }
       )
-      .then(() => console.log('allocated for #1 #2 #3 #4 #5'))
-    // })
+      // .then(() => console.log('allocated for #1 #2 #3 #4 #5'))
+    })
   }
