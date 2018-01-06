@@ -51,6 +51,10 @@ export const initialState = {
     userType: userType.UNKNOWN,
     address: "0x0000000000000000000000000000000000000000",
     isVerified: false,
+    withdrawalData: {
+      tokens: 1,
+      time: -1,
+    }
   },
   price: {
     ether: {
@@ -80,6 +84,11 @@ export const initialState = {
   },
   transactions: {
     request: {
+      state: txState.NONE,
+      txHash: ''
+      // TODO:: Put more info about the transaction here (for ui and info purposes)
+    },
+    withdrawal: {
       state: txState.NONE,
       txHash: ''
       // TODO:: Put more info about the transaction here (for ui and info purposes)

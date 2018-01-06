@@ -7,7 +7,7 @@ import Identicon from './components/Identicon'
 import PriceTable from './components/PriceTable'
 import Withdraw from './Containers/Withdraw.js'
 import RequestWithdraw from './Containers/RequestWithdraw.js'
-
+import { userTypes } from './reducers/initialState'
 const TopBar = ({price}) =>{
   const {
     tokens: {
@@ -70,7 +70,17 @@ const Body = ({user, price}) =>
       <PriceTable price={price}/>
     </div>
     <div className="row">
-      <RequestWithdraw/>
+      {{
+        'WITHDRAW_ETH': (
+          <RequestWithdraw/>
+        ),
+        'REQUEST_WITHDRAW': (
+          <Withdraw/>
+        ),
+        'UNKNOWN': (
+          <h1>Loading your info and permissions.</h1>
+        )
+      }[user.userType]}
     </div>
   </div>
 

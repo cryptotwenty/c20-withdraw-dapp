@@ -19,6 +19,18 @@ const reducer = (state = initialState, action) => {
           address: action.userAddress
         }
       }
+    case actions.LOAD_USERS_WITHDRAWAL:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          userType: (action.hasWithdrawal ? userType.REQUEST_WITHDRAW :  userType.WITHDRAW_ETH),
+          withdrawalData: {
+            tokens: action.withdrawal[0],
+            time: action.withdrawal[1]
+          }
+        }
+      }
     case actions.SAVE_USER_BALANCE:
       let displayBalance = action.precisionBalance.div('1000000000000000000').toNumber()
       return {
@@ -130,7 +142,7 @@ const reducer = (state = initialState, action) => {
           request: {
             ...state.transactions.request,
             state: txState.SUBMIT,
-            tx: action.tx
+            txHash: action.tx
           }
         }
       }
@@ -140,6 +152,40 @@ const reducer = (state = initialState, action) => {
         transactions: {
           ...state.transactions,
           request: {
+            ...state.transactions.request,
+            state: txState.COMPLETE,
+          }
+        }
+      }
+    case actions.INIT_WITHDRAWAL:
+      return {
+        ...state,
+        transactions: {
+          ...state.transactions,
+          withdrawal: {
+            ...state.transactions.request,
+            state: txState.INIT,
+          }
+        }
+      }
+    case actions.SUBMIT_WITHDRAWAL:
+      return {
+        ...state,
+        transactions: {
+          ...state.transactions,
+          withdrawal: {
+            ...state.transactions.request,
+            state: txState.SUBMIT,
+            txHash: action.tx
+          }
+        }
+      }
+    case actions.COMPLETE_WITHDRAWAL:
+      return {
+        ...state,
+        transactions: {
+          ...state.transactions,
+          withdrawal: {
             ...state.transactions.request,
             state: txState.COMPLETE,
           }
