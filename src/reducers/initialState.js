@@ -91,7 +91,10 @@ export const initialState = {
     withdrawal: {
       state: txState.NONE,
       txHash: ''
-      // TODO:: Put more info about the transaction here (for ui and info purposes)
+    },
+    transfer: {
+      state: txState.NONE,
+      txHash: ''
     }
   }
 }

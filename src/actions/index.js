@@ -121,7 +121,6 @@ export const requestWithdraw = (c20Instance, web3, accounts, tokensToWithdraw) =
     type: actions.INIT_REQUEST
   })
 
-  // const tx = await c20Instance.transfer.sendTransaction('0x788a601b5eaa00a8b0bfd91d90e65ea1567ce6af', pow18.mul(tokensToWithdraw), {from: accounts[0]})
   const tx = await c20Instance.requestWithdrawal.sendTransaction(tokensToWithdraw, {from: accounts[0]})
   dispatch({
     type: actions.SUBMIT_REQUEST,
@@ -135,12 +134,29 @@ export const requestWithdraw = (c20Instance, web3, accounts, tokensToWithdraw) =
   })
 }
 
+export const transferTokens = (c20Instance, web3, accounts, to, amount) => async dispatch => {
+  dispatch({
+    type: actions.INIT_SEND
+  })
+
+  const tx = await c20Instance.transfer.sendTransaction(to, amount, {from: accounts[0]})
+  dispatch({
+    type: actions.SUBMIT_SEND,
+    tx: tx
+  })
+
+  const mined = await web3.eth.getTransactionReceiptMined(tx)
+  dispatch({
+    type: actions.COMPLETE_SEND,
+    mined
+  })
+}
+
 export const executeWithdraw = (c20Instance, web3, accounts) => async dispatch => {
   dispatch({
     type: actions.INIT_WITHDRAWAL
   })
 
-  // const tx = await c20Instance.transfer.sendTransaction('0x788a601b5eaa00a8b0bfd91d90e65ea1567ce6af', pow18.mul(0.5), {from: accounts[0]})
   const tx = await c20Instance.withdraw.sendTransaction({from: accounts[0]})
   dispatch({
     type: actions.SUBMIT_WITHDRAWAL,

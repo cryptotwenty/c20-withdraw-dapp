@@ -163,7 +163,7 @@ const reducer = (state = initialState, action) => {
         transactions: {
           ...state.transactions,
           withdrawal: {
-            ...state.transactions.request,
+            ...state.transactions.withdrawal,
             state: txState.INIT,
           }
         }
@@ -174,7 +174,7 @@ const reducer = (state = initialState, action) => {
         transactions: {
           ...state.transactions,
           withdrawal: {
-            ...state.transactions.request,
+            ...state.transactions.withdrawal,
             state: txState.SUBMIT,
             txHash: action.tx
           }
@@ -186,7 +186,41 @@ const reducer = (state = initialState, action) => {
         transactions: {
           ...state.transactions,
           withdrawal: {
-            ...state.transactions.request,
+            ...state.transactions.withdrawal,
+            state: txState.COMPLETE,
+          }
+        }
+      }
+    case actions.INIT_SEND:
+      return {
+        ...state,
+        transactions: {
+          ...state.transactions,
+          transfer: {
+            ...state.transactions.transfer,
+            state: txState.INIT,
+          }
+        }
+      }
+    case actions.SUBMIT_SEND:
+      return {
+        ...state,
+        transactions: {
+          ...state.transactions,
+          transfer: {
+            ...state.transactions.transfer,
+            state: txState.SUBMIT,
+            txHash: action.tx
+          }
+        }
+      }
+    case actions.COMPLETE_SEND:
+      return {
+        ...state,
+        transactions: {
+          ...state.transactions,
+          transfer: {
+            ...state.transactions.transfer,
             state: txState.COMPLETE,
           }
         }

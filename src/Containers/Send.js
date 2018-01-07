@@ -3,10 +3,12 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { withFormik } from 'formik'
 import Yup from 'yup'
-import { requestWithdraw } from '../actions'
+import { transferTokens } from '../actions'
 import { txState } from '../reducers/initialState'
 import BigNumber from 'bignumber.js'
 import './toggle.css'
+// import { ethereum_address } from 'ethereum_address'
+var ethereum_address = require('ethereum-address');
 
 // TODO:: Put into a constants file:
 const pow18 = new BigNumber('1000000000000000000')
@@ -40,12 +42,13 @@ const MyInnerForm = props => {
     : 'loading (TODO:: ADD LOAD SPINNER)'
   const fiatValue = (user.loaded && fund.blockNum > 0 && ether.last_updated > 0) ? (ethValue * ether.price).toFixed(2) : 'loading (TODO:: ADD LOAD SPINNER)'
 
+
   return (
     <form onSubmit={handleSubmit}>
       <table className="table table-bordered table-invested">
         <tbody>
           <tr>
-            <td colSpan={3} style={{whiteSpace: 'normal'}}>For {tokenDisplayAmount} C20, you will receive {ethValue} ETH. Click withdraw to confirm.</td>
+            <td colSpan={3} style={{whiteSpace: 'normal'}}>Please supply the ammount of tokens you wish to send and the destination Ethereum address bellow.</td>
           </tr>
           <tr>
             <td colSpan={3}>
@@ -77,12 +80,23 @@ const MyInnerForm = props => {
                   {errors.tokenAmount &&
                   /*touched.tokenAmount &&*/
                   <div className="ui-state-error">{errors.tokenAmount}</div>}
+                  <input
+                    className="input-c20 form-control"
+                    id="toAddress"
+                    style={{marginBottom: 10, width: '100%'}}
+                    type="text"
+                    value={values.toAddress}
+                    onChange={handleChange} />
+                  {errors.toAddress &&
+                    touched.toAddress &&
+                    <div className="ui-state-error">{errors.toAddress}</div>}
               <button
-                className={errors.tokenAmount /*&& touched.tokenAmount*/ ? "btn btn-withdraw ui-state-error disabled" : "btn btn-withdraw btn-primary"}
+                className={errors.tokenAmount /*&& touched.tokenAmount*/ || (errors.toAddress &&
+                  touched.toAddress) ? "btn btn-withdraw ui-state-error disabled" : "btn btn-withdraw btn-primary"}
                 id="withdrawC20"
                 style={{backgroundColor: 'red'}}
                 type="submit">
-                <i className="fa fa-send" />Request Withdraw
+                <i className="fa fa-send" />Send Tokens
               </button>
             </td>
           </tr>
@@ -105,6 +119,7 @@ const EnhancedForm = withFormik({
   mapPropsToValues: ({tokenAmount}) => {
     return ({
       tokenAmount: tokenAmount,
+      toAddress: ''
     })
   },
   validationSchema: ({minWithdraw, maxWithdraw}) => Yup.object().shape({
@@ -113,6 +128,8 @@ const EnhancedForm = withFormik({
       .min(minWithdraw, 'You cannot withdraw less than ' + minWithdraw + '.')
       .max(maxWithdraw, 'You cannot withdraw more than ' + maxWithdraw + ' tokens which is your full balance.')
       .required('You must specify a withdraw amount.'),
+    toAddress: Yup.string()
+      .test('is-address', '${path} is not a valid checksum address. We only allow checksum addresses for your safety.', value => ethereum_address.isAddress(value))
   }),
   handleSubmit: (values, {setSubmitting, props}) => {
       props.withdrawFunc(values)
@@ -121,14 +138,14 @@ const EnhancedForm = withFormik({
   displayName: 'BasicForm', // helps with React DevTools
 })(MyInnerForm);
 
-class RequestWithdraw extends Component {
+class Send extends Component {
   render() {
     const withdrawFunc = (arg) => {
-      let amountToRequest = pow18.mul(arg.tokenAmount)
+      let sendAmount = pow18.mul(arg.tokenAmount)
       if (arg.fullAmount) {
-        amountToRequest = this.props.price.tokens.user.balanceWeiBN
+        sendAmount = this.props.price.tokens.user.balanceWeiBN
       }
-      this.props.dispatch(requestWithdraw(this.context.c20Instance, this.context.web3, this.context.accounts, amountToRequest))
+      this.props.dispatch(transferTokens(this.context.c20Instance, this.context.web3, this.context.accounts, arg.toAddress, sendAmount))
     }
 
     const formProps = {
@@ -139,13 +156,13 @@ class RequestWithdraw extends Component {
     }
 
     // TODO:: ui: keep the background the submit screen and put text over it as an overlay.
-    switch(this.props.requestTx.state){
+    switch(this.props.transferTx.state){
       case txState.NONE:
         return (
           <div className="col-sm-12">
             <h6 style={{marginTop: 0}}>CHOOSE C20 WITHDRAWAL AMOUNT:</h6>
             <div className="table-responsive">
-              <EnhancedForm tokenAmount={10} {...formProps} withdrawFunc={withdrawFunc}/>
+              <EnhancedForm tokenAmount={0} {...formProps} withdrawFunc={withdrawFunc}/>
             </div>
           </div>
         )
@@ -160,7 +177,7 @@ class RequestWithdraw extends Component {
         return (
           <div className="col-sm-12">
             <h6>Waiting for transaction to be mined Ethereum Network.</h6>
-            <h6>View transaction on <a href={'https://etherscan.io/tx/' + this.props.requestTx.txHash} target="_blank">etherscan.io:</a></h6>
+            <h6>View transaction on <a href={'https://etherscan.io/tx/' + this.props.transferTx.txHash} target="_blank">etherscan.io:</a></h6>
           </div>
         )
       case txState.COMPLETE:
@@ -169,7 +186,7 @@ class RequestWithdraw extends Component {
           <div className="col-sm-12">
             <h6>Transaction has been Mined.</h6>
             <h6>Wait for next price update to withdraw your ether.</h6>
-            <h6>View transaction on <a href={'https://etherscan.io/tx/' + this.props.requestTx.txHash} target="_blank">etherscan.io:</a></h6>
+            <h6>View transaction on <a href={'https://etherscan.io/tx/' + this.props.transferTx.txHash} target="_blank">etherscan.io:</a></h6>
           </div>
         )
       default:
@@ -178,7 +195,7 @@ class RequestWithdraw extends Component {
   }
 }
 
-RequestWithdraw.contextTypes = {
+Send.contextTypes = {
   instanceLoaded: PropTypes.bool,
   accounts: PropTypes.array,
   web3: PropTypes.object,
@@ -189,7 +206,7 @@ const mapStateToProps = state => ({
   user: state.user,
   price: state.price,
   updateTicker: state.updateTicker,
-  requestTx: state.transactions.request,
+  transferTx: state.transactions.transfer,
 })
 
-export default connect(mapStateToProps)(RequestWithdraw)
+export default connect(mapStateToProps)(Send)

@@ -94,7 +94,6 @@ class Withdraw extends Component {
       user: this.props.user,
       price: this.props.price,
     }
-    const special = thingToPrint => console.log(thingToPrint)
 
     // TODO:: ui: keep the background the submit screen and put text over it as an overlay.
     switch(this.props.withdrawalTx.state){

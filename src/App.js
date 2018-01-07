@@ -6,6 +6,7 @@ import PropTypes from 'prop-types'
 import Identicon from './components/Identicon'
 import PriceTable from './components/PriceTable'
 import Withdraw from './Containers/Withdraw.js'
+import Send from './Containers/Send.js'
 import RequestWithdraw from './Containers/RequestWithdraw.js'
 import { userTypes } from './reducers/initialState'
 const TopBar = ({price}) =>{
@@ -81,6 +82,7 @@ const Body = ({user, price}) =>
           <h1>Loading your info and permissions.</h1>
         )
       }[user.userType]}
+      <Send/>
     </div>
   </div>
 
