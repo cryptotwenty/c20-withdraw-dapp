@@ -22,12 +22,14 @@ export const actions = {
 }
 
 // TODO:: remove txHash, it serves no purpose
-export const priceUpdate = (numerator, denominator, txHash, blockNum) => dispatch => {
+export const priceUpdate = (c20Instance, numerator, denominator, txHash, blockNum) => async dispatch => {
+  const lastUpdateTime = await c20Instance.previousUpdateTime()
   dispatch({
     type: actions.UPDATE_PRICE,
     numerator,
     denominator,
     txHash,
+    lastUpdateTime,
     blockNum,
   })
   dispatch(updateCountdownTimer(true))
@@ -36,12 +38,14 @@ export const priceUpdate = (numerator, denominator, txHash, blockNum) => dispatc
 
 export const loadInitialPrice = (c20Instance, accounts) => async dispatch => {
   const currentPrice = await c20Instance.currentPrice()
+  const lastUpdateTime = await c20Instance.previousUpdateTime()
 
   dispatch({
     type: actions.UPDATE_PRICE,
     numerator: currentPrice[0],
     denominator: currentPrice[1],
     blockNum: 1, // default to 1 since only blocktime is accessible
+    lastUpdateTime,
   })
 }
 
@@ -75,18 +79,20 @@ export const loadUser = (c20Instance, accounts) => async dispatch => {
   })
 
   dispatch(loadUserBalance(c20Instance, account))
-
-  c20Instance.withdrawals(accounts[0]).then(withdrawal => {
-      const hasWithdrawal = withdrawal[0].gt('0')
-
-      dispatch({
-        type: actions.LOAD_USERS_WITHDRAWAL,
-        hasWithdrawal,
-        withdrawal,
-      })
-    }
-  )
+  dispatch(loadUsersWithdrawal(c20Instance, account))
 }
+
+export const loadUsersWithdrawal = (c20Instance, account) => dispatch =>
+  c20Instance.withdrawals(account).then(withdrawal => {
+    const hasWithdrawal = withdrawal[0].gt('0')
+
+    dispatch({
+      type: actions.LOAD_USERS_WITHDRAWAL,
+      hasWithdrawal,
+      withdrawal,
+    })
+  })
+
 
 // get the users token balance
 export const loadUserBalance = (c20Instance, account) => dispatch =>
@@ -132,6 +138,8 @@ export const requestWithdraw = (c20Instance, web3, accounts, tokensToWithdraw) =
     type: actions.COMPLETE_REQUEST,
     mined
   })
+
+  dispatch(loadUsersWithdrawal(c20Instance, accounts[0]))
 }
 
 export const transferTokens = (c20Instance, web3, accounts, to, amount) => async dispatch => {

@@ -62,7 +62,7 @@ class InstanceWrapper extends Component {
         const startMonitorBlock = Math.max(0, block.number - 2)
 
         result.c20Instance.PriceUpdate(
-          {}, { fromBlock: startMonitorBlock, toBlock: 'latest' }
+          {}, { fromBlock: 1, toBlock: 'latest' }
         ).watch ( (err, response) => {
           const {
             transactionHash,
@@ -79,6 +79,7 @@ class InstanceWrapper extends Component {
           })
 
           dispatch(priceUpdate(
+            result.c20Instance,
             numerator,
             denominator,
             transactionHash,

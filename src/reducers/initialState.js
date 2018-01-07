@@ -1,7 +1,8 @@
 export const userType = {
   UNKNOWN: 'UNKNOWN',
-  WITHDRAW_ETH: 'WITHDRAW_ETH',
+  WATING_FOR_PRICE_UPDATE: 'WATING_FOR_PRICE_UPDATE',
   REQUEST_WITHDRAW: 'REQUEST_WITHDRAW',
+  WITHDRAW_ETH: 'WITHDRAW_ETH',
 }
 
 export const currency = {
@@ -75,12 +76,13 @@ export const initialState = {
         txHash: null,
         numerator: null,
         denominator: null,
+        lastUpdateTime: -1,
       }
     }
   },
   updateTicker: {
     minute: -1,
-    // lastUpdateTime: 0,
+    lastUpdateTime: 0,
   },
   transactions: {
     request: {
