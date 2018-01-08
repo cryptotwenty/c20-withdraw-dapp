@@ -22,7 +22,7 @@ export const actions = {
 }
 
 // TODO:: remove txHash, it serves no purpose
-export const priceUpdate = (c20Instance, numerator, denominator, txHash, blockNum) => async dispatch => {
+export const priceUpdate = (c20Instance, numerator, denominator, txHash, blockNum, accounts) => async dispatch => {
   const lastUpdateTime = await c20Instance.previousUpdateTime()
   dispatch({
     type: actions.UPDATE_PRICE,
@@ -33,6 +33,7 @@ export const priceUpdate = (c20Instance, numerator, denominator, txHash, blockNu
     blockNum,
   })
   dispatch(updateCountdownTimer(true))
+  dispatch(loadUsersWithdrawal(c20Instance, accounts[0]))
 }
 
 
@@ -47,6 +48,7 @@ export const loadInitialPrice = (c20Instance, accounts) => async dispatch => {
     blockNum: 1, // default to 1 since only blocktime is accessible
     lastUpdateTime,
   })
+  dispatch(loadUsersWithdrawal(c20Instance, accounts[0]))
 }
 
 export const updateCountdownTimer = (wasUpdate = false) => ({

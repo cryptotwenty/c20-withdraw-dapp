@@ -72,13 +72,13 @@ const Body = ({user, price}) =>
     </div>
     <div className="row">
       {{
-        'WITHDRAW_ETH': (
+        'REQUEST_WITHDRAW': (
           <RequestWithdraw/>
         ),
         'WATING_FOR_PRICE_UPDATE': (
           <h3>Wating for a price update before you can enact your withdrawal.</h3>
         ),
-        'REQUEST_WITHDRAW': (
+        'WITHDRAW_ETH': (
           <Withdraw/>
         ),
         'UNKNOWN': (

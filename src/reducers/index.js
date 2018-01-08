@@ -20,23 +20,18 @@ const reducer = (state = initialState, action) => {
         }
       }
     case actions.LOAD_USERS_WITHDRAWAL:
-      console.log('loading users withdrawal...')
-      console.log(action.withdrawal[1].toString(), '<', state.price.tokens.fund.lastUpdateTime.toString())
-      console.log(state.price.tokens.fund.lastUpdateTime < 0)
-      console.log((action.withdrawal[1].lt(state.price.tokens.fund.lastUpdateTime) || true) ?
-        userType.WATING_FOR_PRICE_UPDATE
-        : userType.REQUEST_WITHDRAW
-      )
+      const hasFetchedLastUpdateTime = state.price.tokens.fund.lastUpdateTime < 0
+      const newUserType = (action.hasWithdrawal ?
+        ((action.withdrawal[1].lt(state.price.tokens.fund.lastUpdateTime) || state.price.tokens.fund.lastUpdateTime < 0) ?
+          userType.WITHDRAW_ETH
+          : userType.WATING_FOR_PRICE_UPDATE
+        )
+        : userType.REQUEST_WITHDRAW)
       return {
         ...state,
         user: {
           ...state.user,
-          userType: (action.hasWithdrawal ?
-            ((action.withdrawal[1].lt(state.price.tokens.fund.lastUpdateTime) || state.price.tokens.fund.lastUpdateTime < 0) ?
-              userType.WATING_FOR_PRICE_UPDATE
-              : userType.REQUEST_WITHDRAW
-            )
-            : userType.WITHDRAW_ETH),
+          userType: newUserType,
           withdrawalData: {
             tokens: action.withdrawal[0],
             time: action.withdrawal[1]
@@ -90,20 +85,8 @@ const reducer = (state = initialState, action) => {
 
       const tokensPerEther = action.numerator.div(action.denominator).toNumber()
 
-      // console.log('loading users withdrawal...')
-      // console.log(action.withdrawal[1].toString(), '<', action.lastUpdateTime.toString())
-      // return {
-      //   ...state,
-
-      // const usersNewType =  (state.user.userType ===  ?
-      //   (action.withdrawal[1].lt(state.price.tokens.fund.lastUpdateTime) ? userType.WATING_FOR_PRICE_UPDATE : userType.REQUEST_WITHDRAW)
-      //   : userType.WITHDRAW_ETH)
       return {
         ...state,
-        // user: {
-        //   ...state.user,
-        //   userType:,
-        // }
         price: {
           ...state.price,
           tokens: {

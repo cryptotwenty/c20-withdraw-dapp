@@ -84,6 +84,7 @@ class InstanceWrapper extends Component {
             denominator,
             transactionHash,
             blockNumber,
+            result.accounts
           ))
         })
       })
