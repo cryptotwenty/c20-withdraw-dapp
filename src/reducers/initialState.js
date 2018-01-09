@@ -1,3 +1,5 @@
+import BigNumber from 'bignumber.js'
+
 export const userType = {
   UNKNOWN: 'UNKNOWN',
   WATING_FOR_PRICE_UPDATE: 'WATING_FOR_PRICE_UPDATE',
@@ -53,7 +55,7 @@ export const initialState = {
     address: "0x0000000000000000000000000000000000000000",
     isVerified: false,
     withdrawalData: {
-      tokens: 1,
+      tokens: new BigNumber(0),
       time: -1,
     }
   },
@@ -87,16 +89,22 @@ export const initialState = {
   transactions: {
     request: {
       state: txState.NONE,
-      txHash: ''
+      txHash: '',
+      message: '',
+      transactionSuccess: false,
       // TODO:: Put more info about the transaction here (for ui and info purposes)
     },
     withdrawal: {
       state: txState.NONE,
-      txHash: ''
+      txHash: '',
+      message: '',
+      transactionSuccess: false,
     },
     transfer: {
       state: txState.NONE,
-      txHash: ''
+      txHash: '',
+      message: '',
+      transactionSuccess: false,
     }
   }
 }

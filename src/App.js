@@ -90,8 +90,9 @@ const WitdrawSteps = ({level}) => { // Level 1, 2 and 3 correspond to the 3 user
   )
 }
 
-const Body = ({usersType, address, price}) =>
-  <div className="row">
+const Body = ({usersType, address, price}) =>{
+  console.log('address', address)
+  return <div className="row">
     <div className="row">
       <div className="col-sm-12">
         <h4>Your C20 Eth address:</h4>
@@ -114,7 +115,7 @@ const Body = ({usersType, address, price}) =>
       }
       {/*<Send/>*//*Disabled for this release*/}
     </div>
-  </div>
+  </div>}
 
   class App extends Component {
     render() {

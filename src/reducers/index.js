@@ -159,8 +159,25 @@ const reducer = (state = initialState, action) => {
         transactions: {
           ...state.transactions,
           request: {
+            message: '',
             ...state.transactions.request,
             state: txState.COMPLETE,
+            transactionSuccess: action.transactionSuccess,
+          }
+        }
+      }
+    case actions.RESET_REQUEST:
+      const curState = state.transactions.request.state
+      const newTxState = (curState === txState.INIT) ? txState.NONE : (curState === txState.SUBMIT) ? txState.COMPLETE : txState.NONE
+      return {
+        ...state,
+        transactions: {
+          ...state.transactions,
+          request: {
+            message: '',
+            ...state.transactions.request,
+            state: newTxState,
+            message: action.message
           }
         }
       }
@@ -194,44 +211,59 @@ const reducer = (state = initialState, action) => {
           ...state.transactions,
           withdrawal: {
             ...state.transactions.withdrawal,
+            message: '',
             state: txState.COMPLETE,
           }
         }
       }
-    case actions.INIT_SEND:
+    case actions.RESET_WITHDRAWAL:
       return {
         ...state,
         transactions: {
           ...state.transactions,
-          transfer: {
-            ...state.transactions.transfer,
-            state: txState.INIT,
+          withdrawal: {
+            ...state.transactions.withdrawal,
+            state: txState.NONE,
+            message: action.message
           }
         }
       }
-    case actions.SUBMIT_SEND:
-      return {
-        ...state,
-        transactions: {
-          ...state.transactions,
-          transfer: {
-            ...state.transactions.transfer,
-            state: txState.SUBMIT,
-            txHash: action.tx
-          }
-        }
-      }
-    case actions.COMPLETE_SEND:
-      return {
-        ...state,
-        transactions: {
-          ...state.transactions,
-          transfer: {
-            ...state.transactions.transfer,
-            state: txState.COMPLETE,
-          }
-        }
-      }
+      // SEND is deprecated.
+    // case actions.INIT_SEND:
+    //   return {
+    //     ...state,
+    //     transactions: {
+    //       ...state.transactions,
+    //       transfer: {
+    //         ...state.transactions.transfer,
+    //         state: txState.INIT,
+    //       }
+    //     }
+    //   }
+    // case actions.SUBMIT_SEND:
+    //   return {
+    //     ...state,
+    //     transactions: {
+    //       ...state.transactions,
+    //       transfer: {
+    //         ...state.transactions.transfer,
+    //         state: txState.SUBMIT,
+    //         txHash: action.tx
+    //       }
+    //     }
+    //   }
+    // case actions.COMPLETE_SEND:
+    //   return {
+    //     ...state,
+    //     transactions: {
+    //       ...state.transactions,
+    //       transfer: {
+    //         ...state.transactions.transfer,
+    //         message: '',
+    //         state: txState.COMPLETE,
+    //       }
+    //     }
+    //   }
     default:
       return state
   }
