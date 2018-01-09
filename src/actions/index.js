@@ -12,12 +12,15 @@ export const actions = {
   INIT_REQUEST: 'INIT_REQUEST',
   SUBMIT_REQUEST: 'SUBMIT_REQUEST',
   COMPLETE_REQUEST: 'COMPLETE_REQUEST',
+  RESET_REQUEST: 'RESET_REQUEST',
   INIT_WITHDRAWAL: 'INIT_WITHDRAWAL',
   SUBMIT_WITHDRAWAL: 'SUBMIT_WITHDRAWAL',
   COMPLETE_WITHDRAWAL: 'COMPLETE_WITHDRAWAL',
+  RESET_WITHDRAWAL: 'RESET_WITHDRAWAL',
   INIT_SEND: 'INIT_SEND',
   SUBMIT_SEND: 'SUBMIT_SEND',
   COMPLETE_SEND: 'COMPLETE_SEND',
+  RESET_SEND: 'RESET_SEND',
   LOAD_USERS_WITHDRAWAL: 'LOAD_USERS_WITHDRAWAL',
 }
 
@@ -128,17 +131,27 @@ export const requestWithdraw = (c20Instance, web3, accounts, tokensToWithdraw) =
   dispatch({
     type: actions.INIT_REQUEST
   })
-
-  const tx = await c20Instance.requestWithdrawal.sendTransaction(tokensToWithdraw, {from: accounts[0]})
-  dispatch({
-    type: actions.SUBMIT_REQUEST,
-    tx: tx
-  })
+  let tx
+  try {
+    tx = await c20Instance.requestWithdrawal.sendTransaction(tokensToWithdraw, {from: accounts[0]})
+    dispatch({
+      type: actions.SUBMIT_REQUEST,
+      tx: tx
+    })
+  } catch (err) {
+    dispatch({
+      type: actions.RESET_REQUEST,
+      message: 'ERROR: Transaction was declined by your signing agent (Eg MetaMask). Please try again.'
+    })
+    return
+  }
 
   const mined = await web3.eth.getTransactionReceiptMined(tx)
+  const transactionSuccess = mined.status === '0x1'
   dispatch({
     type: actions.COMPLETE_REQUEST,
-    mined
+    mined,
+    transactionSuccess,
   })
 
   dispatch(loadUsersWithdrawal(c20Instance, accounts[0]))

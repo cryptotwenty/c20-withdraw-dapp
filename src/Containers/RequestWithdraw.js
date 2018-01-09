@@ -138,38 +138,59 @@ class RequestWithdraw extends Component {
       price: this.props.price,
     }
 
+    const {
+      requestTx: {
+        state,
+        message,
+        txHash,
+        transactionSuccess,
+      },
+      isDisabled,
+    } = this.props
+
+    const disabledClass = isDisabled ? ' is-disabled' : ''
     // TODO:: ui: keep the background the submit screen and put text over it as an overlay.
-    switch(this.props.requestTx.state){
+    switch(state){
       case txState.NONE:
         return (
-          <div className="col-sm-12">
+          <div className={"col-sm-12" + disabledClass}>
+            {(message !== '') && <div className="ui-state-error">{message}</div>}
             <h6 style={{marginTop: 0}}>CHOOSE C20 WITHDRAWAL AMOUNT:</h6>
             <div className="table-responsive">
-              <EnhancedForm tokenAmount={10} {...formProps} withdrawFunc={withdrawFunc}/>
+              <EnhancedForm tokenAmount={0} {...formProps} withdrawFunc={withdrawFunc}/>
             </div>
           </div>
         )
       case txState.INIT:
         // TODO:: add message and button about reloading if user rejects in metamask
         return (
-          <div className="col-sm-12">
+          <div className={"col-sm-12" + disabledClass}>
             <h6>Creating transaction and sending to the Ethereum Network.</h6>
           </div>
         )
       case txState.SUBMIT:
         return (
-          <div className="col-sm-12">
+          <div className={"col-sm-12" + disabledClass}>
             <h6>Waiting for transaction to be mined Ethereum Network.</h6>
-            <h6>View transaction on <a href={'https://etherscan.io/tx/' + this.props.requestTx.txHash} target="_blank">etherscan.io:</a></h6>
+            <h6>View transaction on <a href={'https://etherscan.io/tx/' + txHash} target="_blank">etherscan.io:</a></h6>
           </div>
         )
       case txState.COMPLETE:
         // TODO:: Add timer
         return (
           <div className="col-sm-12">
-            <h6>Transaction has been Mined.</h6>
-            <h6>Wait for next price update to withdraw your ether.</h6>
-            <h6>View transaction on <a href={'https://etherscan.io/tx/' + this.props.requestTx.txHash} target="_blank">etherscan.io:</a></h6>
+            {transactionSuccess?
+              <div className={disabledClass}>
+                <h6>Transaction has been Mined.</h6>
+                <h6>Wait for next price update to withdraw your ether.</h6>
+              </div>
+            :
+              <div className="ui-state-error">
+                <h6>Transaction has been Mined. However, it was unsuccessful.</h6>
+                <h6>Please try again or contact Crypto20 support.</h6>
+              </div>
+            }
+            <h6>View transaction on <a href={'https://etherscan.io/tx/' + txHash} target="_blank">etherscan.io:</a></h6>
           </div>
         )
       default:

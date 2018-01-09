@@ -8,7 +8,7 @@ import PriceTable from './components/PriceTable'
 import Withdraw from './Containers/Withdraw.js'
 import Send from './Containers/Send.js'
 import RequestWithdraw from './Containers/RequestWithdraw.js'
-import { userTypes } from './reducers/initialState'
+import { userType } from './reducers/initialState'
 const TopBar = ({price}) =>{
   const {
     tokens: {
@@ -53,14 +53,51 @@ const PriceUpdateStatus = ({updateTicker}) =>
     </div>
   </div>
 
-const Body = ({user, price}) =>
+const Step = ({number, caption}) =>
+  <ul className="list-group" style={{marginBottom: '10px'}}>
+    <li className="list-group-item" style={{color:'#303036', backgroundColor: '#f5f5f5', wordWrap: 'break-word'}}>
+      <b>
+        <a href="/portal/invest/">
+          <div className="circle-small">
+            <i className="fa fa-money"></i>
+          </div>
+          <div className="step-item">STEP {number}: <span>{caption}</span></div>
+        </a>
+      </b>
+    </li>
+  </ul>
+
+const WitdrawSteps = ({level}) => { // Level 1, 2 and 3 correspond to the 3 user types
+  // <h1>level{level} ++ {(Number(level) !== Number(1)) ? ' is-disabled' : ''}</h1>
+  return (
+    <div>
+      <div className='row'>
+        <div className={((level !== 1) ? ' is-disabled' : '')}>
+          <Step number={1} level={level} />
+        </div>
+        <RequestWithdraw isDisabled={level !== 1}/>
+      </div>
+      <div className={'row' + (level !== 2 ? ' is-disabled' : '')}>
+        <Step number={2} level={level} />
+        <h5>Wait for a price update before you can enact your withdrawal.</h5>
+        <p>You will never have to awit longer than 1 hour, since price updates occur hourly.</p>
+      </div>
+        <div className={'row' + (level !== 3 ? ' is-disabled' : '')}>
+        <Step number={3} level={level} />
+        <Withdraw/>
+      </div>
+    </div>
+  )
+}
+
+const Body = ({usersType, address, price}) =>
   <div className="row">
     <div className="row">
       <div className="col-sm-12">
         <h4>Your C20 Eth address:</h4>
         <div style={{display: 'flex', flexDirection: 'row'}}>
-          <Identicon diameter={60} address={user.address} />
-          <h5 style={{paddinLeft: '2em'}}>{user.address}</h5>
+          <Identicon diameter={60} address={address} />
+          <h5 style={{paddinLeft: '2em'}}>{address}</h5>
         </div>
       </div>
     </div>
@@ -71,21 +108,11 @@ const Body = ({user, price}) =>
       <PriceTable price={price}/>
     </div>
     <div className="row">
-      {{
-        'REQUEST_WITHDRAW': (
-          <RequestWithdraw/>
-        ),
-        'WATING_FOR_PRICE_UPDATE': (
-          <h3>Wating for a price update before you can enact your withdrawal.</h3>
-        ),
-        'WITHDRAW_ETH': (
-          <Withdraw/>
-        ),
-        'UNKNOWN': (
-          <h1>Loading your info and permissions.</h1>
-        )
-      }[user.userType]}
-      <Send/>
+      {userType == userType.UNKNOWN ?
+        <h1>Loading your info and permissions.</h1>
+        : <WitdrawSteps level={usersType === userType.REQUEST_WITHDRAW ? 1 : usersType === userType.WATING_FOR_PRICE_UPDATE? 2 : usersType === userType.WITHDRAW_ETH ? 3 : -1}/>
+      }
+      {/*<Send/>*//*Disabled for this release*/}
     </div>
   </div>
 
@@ -100,7 +127,7 @@ const Body = ({user, price}) =>
                 <div className="row">
                   <TopBar price={this.props.price}/>
                   <PriceUpdateStatus updateTicker={this.props.updateTicker}/>
-                  <Body user={this.props.user} price={this.props.price}/>
+                  <Body usersType={this.props.user.userType} address={this.props.user.address} price={this.props.price}/>
                 </div>
               </div>
             </div>
