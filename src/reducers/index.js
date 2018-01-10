@@ -22,7 +22,9 @@ const reducer = (state = initialState, action) => {
     case actions.LOAD_USERS_WITHDRAWAL:
       const hasFetchedLastUpdateTime = state.price.tokens.fund.lastUpdateTime < 0
       const newUserType = (action.hasWithdrawal ?
-        ((action.withdrawal[1].lt(state.price.tokens.fund.lastUpdateTime) || state.price.tokens.fund.lastUpdateTime < 0) ?
+        (((action.withdrawal[1].lt(state.price.tokens.fund.lastUpdateTime)
+          && state.price.tokens.fund.lastUpdateTime > 0)
+        ) ?
           userType.WITHDRAW_ETH
           : userType.WATING_FOR_PRICE_UPDATE
         )

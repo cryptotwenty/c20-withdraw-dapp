@@ -171,7 +171,7 @@ class RequestWithdraw extends Component {
       case txState.SUBMIT:
         return (
           <div className={"col-sm-12" + disabledClass}>
-            <h6>Waiting for transaction to be mined Ethereum Network.</h6>
+            <h6>Waiting for transaction to be mined by the Ethereum Network.</h6>
             <h6>View transaction on <a href={'https://etherscan.io/tx/' + txHash} target="_blank">etherscan.io:</a></h6>
           </div>
         )

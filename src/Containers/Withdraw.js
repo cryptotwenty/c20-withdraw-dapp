@@ -5,7 +5,11 @@ import { withFormik } from 'formik'
 import Yup from 'yup'
 import { executeWithdraw } from '../actions'
 import { txState } from '../reducers/initialState'
+import BigNumber from 'bignumber.js'
 import './toggle.css'
+
+// TODO:: Put into a constants file:
+const pow18 = new BigNumber('1000000000000000000')
 
 // Our inner form component. Will be wrapped with Formik({..})
 const MyInnerForm = props => {
@@ -29,7 +33,7 @@ const MyInnerForm = props => {
     }
   } = props
 
-  const withdrawAmount = user.withdrawalData.tokens.toNumber()
+  const withdrawAmount = user.withdrawalData.tokens.div(pow18).toNumber()
   const tokenDisplayAmount = withdrawAmount
   const ethValue = fund.blockNum > 0 ?
     (withdrawAmount / fund.tokensPerEther).toFixed(2)
@@ -116,7 +120,7 @@ class Withdraw extends Component {
       case txState.SUBMIT:
         return (
           <div className="col-sm-12">
-            <h6>Waiting for transaction to be mined Ethereum Network.</h6>
+            <h6>Waiting for transaction to be mined by the Ethereum Network.</h6>
             <h6>View transaction on <a href={'https://etherscan.io/tx/' + this.props.withdrawalTx.txHash} target="_blank">etherscan.io:</a></h6>
           </div>
         )

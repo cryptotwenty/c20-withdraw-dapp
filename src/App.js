@@ -68,7 +68,6 @@ const Step = ({number, caption}) =>
   </ul>
 
 const WitdrawSteps = ({level}) => { // Level 1, 2 and 3 correspond to the 3 user types
-  // <h1>level{level} ++ {(Number(level) !== Number(1)) ? ' is-disabled' : ''}</h1>
   return (
     <div>
       <div className='row'>
@@ -80,7 +79,7 @@ const WitdrawSteps = ({level}) => { // Level 1, 2 and 3 correspond to the 3 user
       <div className={'row' + (level !== 2 ? ' is-disabled' : '')}>
         <Step number={2} level={level} />
         <h5>Wait for a price update before you can enact your withdrawal.</h5>
-        <p>You will never have to awit longer than 1 hour, since price updates occur hourly.</p>
+        <p>You will never have to wait longer than 1 hour, since price updates occur hourly.</p>
       </div>
         <div className={'row' + (level !== 3 ? ' is-disabled' : '')}>
         <Step number={3} level={level} />
@@ -90,8 +89,7 @@ const WitdrawSteps = ({level}) => { // Level 1, 2 and 3 correspond to the 3 user
   )
 }
 
-const Body = ({usersType, address, price}) =>{
-  console.log('address', address)
+const Body = ({usersType, address, price}) => {
   return <div className="row">
     <div className="row">
       <div className="col-sm-12">
