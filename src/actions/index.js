@@ -22,6 +22,7 @@ export const actions = {
   COMPLETE_SEND: 'COMPLETE_SEND',
   RESET_SEND: 'RESET_SEND',
   LOAD_USERS_WITHDRAWAL: 'LOAD_USERS_WITHDRAWAL',
+  LOAD_USERS_WHITELIST: 'LOAD_USERS_WHITELIST',
 }
 
 // TODO:: remove txHash, it serves no purpose
@@ -83,9 +84,20 @@ export const loadUser = (c20Instance, accounts) => async dispatch => {
     userAddress: account
   })
 
+  dispatch(loadUsersWhitelist(c20Instance, account))
   dispatch(loadUserBalance(c20Instance, account))
   dispatch(loadUsersWithdrawal(c20Instance, account))
 }
+
+
+
+export const loadUsersWhitelist = (c20Instance, account) => dispatch =>
+  c20Instance.whitelist(account).then(isWhitelisted => {
+    dispatch({
+      type: actions.LOAD_USERS_WHITELIST,
+      isWhitelisted,
+    })
+  })
 
 export const loadUsersWithdrawal = (c20Instance, account) => dispatch =>
   c20Instance.withdrawals(account).then(withdrawal => {

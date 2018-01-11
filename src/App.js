@@ -9,6 +9,7 @@ import Withdraw from './Containers/Withdraw.js'
 import Send from './Containers/Send.js'
 import RequestWithdraw from './Containers/RequestWithdraw.js'
 import { userType } from './reducers/initialState'
+import Loading from './components/Loading'
 const TopBar = ({price}) =>{
   const {
     tokens: {
@@ -107,9 +108,14 @@ const Body = ({usersType, address, price}) => {
       <PriceTable price={price}/>
     </div>
     <div className="row">
-      {userType == userType.UNKNOWN ?
-        <h1>Loading your info and permissions.</h1>
-        : <WitdrawSteps level={usersType === userType.REQUEST_WITHDRAW ? 1 : usersType === userType.WATING_FOR_PRICE_UPDATE? 2 : usersType === userType.WITHDRAW_ETH ? 3 : -1}/>
+      {
+
+        (userType == userType.UNKNOWN ?
+          <div>
+            <h1>Loading your info and permissions.</h1>
+            <Loading size={'50px'}/>
+          </div>
+          : <WitdrawSteps level={usersType === userType.REQUEST_WITHDRAW ? 1 : usersType === userType.WATING_FOR_PRICE_UPDATE? 2 : usersType === userType.WITHDRAW_ETH ? 3 : -1}/>)
       }
       {/*<Send/>*//*Disabled for this release*/}
     </div>
@@ -126,7 +132,25 @@ const Body = ({usersType, address, price}) => {
                 <div className="row">
                   <TopBar price={this.props.price}/>
                   <PriceUpdateStatus updateTicker={this.props.updateTicker}/>
-                  <Body usersType={this.props.user.userType} address={this.props.user.address} price={this.props.price}/>
+                  {
+                    this.props.user.isWhitelistLoaded ?
+                      (this.props.user.isWhitelisted ?
+                        <Body usersType={this.props.user.userType} address={this.props.user.address} price={this.props.price}/>
+                        :
+                        <div>
+                          <h2>You have not been whitelisted.</h2>
+                          <h3>This functionality is disabled for your account.</h3>
+                          <p>Only whitelisted accounts can use this functionality.</p>
+                          <p>Please follow our KYC (know your customer) process to continue.</p>
+                        </div>
+                      )
+                      :
+                      <div>
+                        <h3>Loading Whitelist information</h3>
+                        <p>Only whitelisted accounts can use this functionality</p>
+                        <Loading size={'50px'}/>
+                      </div>
+                  }
                 </div>
               </div>
             </div>

@@ -53,7 +53,8 @@ export const initialState = {
     loaded: false,
     userType: userType.UNKNOWN,
     address: "0x0000000000000000000000000000000000000000",
-    isVerified: false,
+    isWhitelisted: false,
+    isWhitelistLoaded: false,
     withdrawalData: {
       tokens: new BigNumber(0),
       time: -1,

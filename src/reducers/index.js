@@ -19,6 +19,15 @@ const reducer = (state = initialState, action) => {
           address: action.userAddress
         }
       }
+    case actions.LOAD_USERS_WHITELIST:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          isWhitelisted: action.isWhitelisted,
+          isWhitelistLoaded: true,
+        }
+      }
     case actions.LOAD_USERS_WITHDRAWAL:
       const hasFetchedLastUpdateTime = state.price.tokens.fund.lastUpdateTime < 0
       const newUserType = (action.hasWithdrawal ?
