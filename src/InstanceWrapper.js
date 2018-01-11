@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { PropTypes } from 'prop-types'
 import getC20Instance from './utils/getC20Instance'
+import Loading from './components/Loading'
 import { connect } from 'react-redux'
 import { priceUpdate, loadUser, loadInitialPrice, getEtherPrice, loadUserBalance, updateCountdownTimer } from './actions'
 
@@ -101,6 +102,7 @@ class InstanceWrapper extends Component {
       <div>
         <h1>Connecting to Ethereum</h1>
         <h2>Please be patient</h2>
+        <Loading size={'50px'}/>
       </div>
   }
 }
@@ -113,9 +115,3 @@ InstanceWrapper.childContextTypes = {
 }
 
 export default connect()(InstanceWrapper)
-// const mapStateToProps = state => ({
-//   user: state.user,
-//   price: state.price,
-// })
-//
-// export default connect(mapStateToProps)(InstanceWrapper)

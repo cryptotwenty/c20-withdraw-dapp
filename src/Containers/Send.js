@@ -7,7 +7,7 @@ import { transferTokens } from '../actions'
 import { txState } from '../reducers/initialState'
 import BigNumber from 'bignumber.js'
 import './toggle.css'
-// import { ethereum_address } from 'ethereum_address'
+import Loading from '../components/Loading'
 var ethereum_address = require('ethereum-address');
 
 // TODO:: Put into a constants file:
@@ -39,8 +39,8 @@ const MyInnerForm = props => {
   const tokenDisplayAmount = tokenAmount.toFixed(2)
   const ethValue = fund.blockNum > 0 ?
     (tokenAmount / fund.tokensPerEther).toFixed(2)
-    : 'loading (TODO:: ADD LOAD SPINNER)'
-  const fiatValue = (user.loaded && fund.blockNum > 0 && ether.last_updated > 0) ? (ethValue * ether.price).toFixed(2) : 'loading (TODO:: ADD LOAD SPINNER)'
+    : <Loading size={'10px'}/>
+  const fiatValue = (user.loaded && fund.blockNum > 0 && ether.last_updated > 0) ? (ethValue * ether.price).toFixed(2) : <Loading size={'10px'}/>
 
 
   return (

@@ -6,6 +6,7 @@ import Yup from 'yup'
 import { executeWithdraw } from '../actions'
 import { txState } from '../reducers/initialState'
 import BigNumber from 'bignumber.js'
+import Loading from '../components/Loading'
 import './toggle.css'
 
 // TODO:: Put into a constants file:
@@ -37,8 +38,8 @@ const MyInnerForm = props => {
   const tokenDisplayAmount = withdrawAmount
   const ethValue = fund.blockNum > 0 ?
     (withdrawAmount / fund.tokensPerEther).toFixed(2)
-    : 'loading (TODO:: ADD LOAD SPINNER)'
-  const fiatValue = (user.loaded && fund.blockNum > 0 && ether.last_updated > 0) ? (ethValue * ether.price).toFixed(2) : 'loading (TODO:: ADD LOAD SPINNER)'
+    : <Loading size={'10px'}/>
+  const fiatValue = (user.loaded && fund.blockNum > 0 && ether.last_updated > 0) ? (ethValue * ether.price).toFixed(2) : <Loading size={'10px'}/>
 
   return (
     <form onSubmit={handleSubmit}>
