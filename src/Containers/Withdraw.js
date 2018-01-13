@@ -130,7 +130,7 @@ class Withdraw extends Component {
         return (
           <div className="col-sm-12">
             <h6>Transaction has been Mined.</h6>
-            <h6>Wait for next price update to withdraw your ether.</h6>
+            <h6>Your balance should be updated.</h6>
             <h6>View transaction on <a href={'https://etherscan.io/tx/' + this.props.withdrawalTx.txHash} target="_blank">etherscan.io:</a></h6>
           </div>
         )
