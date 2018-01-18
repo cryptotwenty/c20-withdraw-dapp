@@ -2,11 +2,13 @@ import React from "react"
 import ReactDOM from "react-dom"
 import {Provider} from "react-redux"
 
-// import "./index.css" // remove this for live deploy
 import App from "./App"
 import InstanceWrapper from './InstanceWrapper'
 import configureStore from "./configureStore"
 
+if (process.env.NODE_ENV === 'development') {
+  require("./index.css")
+}
 const store = configureStore()
 
 ReactDOM.render(
