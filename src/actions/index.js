@@ -71,7 +71,7 @@ export const updateUpdateTime = (c20Instance, accounts) => async dispatch => {
 
 export const loadUser = (c20Instance, accounts) => async dispatch => {
   let account
-  if (accounts[0] === null)
+  if (accounts[0] === null || accounts[0] === undefined)
     account = '0x0000000000000000000000000000000000000000'
   else
     account = accounts[0]
