@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import Identicon from './components/Identicon'
 import PriceTable from './components/PriceTable'
 import Withdraw from './Containers/Withdraw.js'
-import Send from './Containers/Send.js'
+// import Send from './Containers/Send.js'
 import RequestWithdraw from './Containers/RequestWithdraw.js'
 import { userType } from './reducers/initialState'
 import Loading from './components/Loading'
@@ -44,7 +44,7 @@ const PriceUpdateStatus = ({updateTicker}) =>
     <div className="col-xs-12">
       <h6>NEXT C20 PRICE UPDATE: <small>(UPDATED HOURLY)</small></h6>
       <div className="progress" style={{backgroundColor: '#f5f5f5', margin: '10px 0'}}>
-        {updateTicker.minute == 60 ?
+        {updateTicker.minute === 60 ?
           <div className="progress-bar" data-original-title="Pending update, waiting for confirmation from Ethereum." data-placement="top" data-toggle="tooltip" role="progressbar" style={{width: '100%', backgroundColor: '#003049'}}>Pending update, waiting for confirmation from Ethereum.</div>
           : <div className="progress-bar" data-original-title={updateTicker.minute + "Minutes Till Next C20 Price Update"} data-placement="top" data-toggle="tooltip" role="progressbar" style={{width: 100*Math.max(0, updateTicker.minute)/60  + '%', backgroundColor: '#003049'}}>
               {60 - updateTicker.minute} Mins left
@@ -110,7 +110,7 @@ const Body = ({usersType, address, price}) => {
     <div className="row">
       {
 
-        (userType == userType.UNKNOWN ?
+        (userType === userType.UNKNOWN ?
           <div>
             <h1>Loading your info and permissions.</h1>
             <Loading size={'50px'}/>
@@ -125,6 +125,12 @@ const Body = ({usersType, address, price}) => {
     render() {
       return (
         <div className="col-xs-12 col-sm-12 col-lg-8 col-lg-push-2">
+          {(parseInt(this.context.web3.version.network, 10)!==1) &&
+            <div className="panel">
+              <h1 className="ui-state-error">Warning: You are on a TEST network.</h1>
+              <h4>You will not interact with the live Cryto20 Token.</h4>
+            </div>
+          }
           <div className="panel">
           <div className="panel-footer">
             <div className="row">

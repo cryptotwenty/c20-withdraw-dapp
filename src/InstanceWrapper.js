@@ -3,7 +3,7 @@ import { PropTypes } from 'prop-types'
 import getC20Instance from './utils/getC20Instance'
 import Loading from './components/Loading'
 import { connect } from 'react-redux'
-import { priceUpdate, loadUser, loadInitialPrice, getEtherPrice, loadUserBalance, updateCountdownTimer } from './actions'
+import { priceUpdate, loadUser, loadInitialPrice, getEtherPrice, updateCountdownTimer } from './actions'
 
 class InstanceWrapper extends Component {
   constructor(props) {
@@ -41,7 +41,7 @@ class InstanceWrapper extends Component {
         dispatch(updateCountdownTimer())
       }
       every30Sec()
-      var timerID = setInterval(() => {
+      setInterval(() => {
         every30Sec()
       }, 30 * 1000);
 

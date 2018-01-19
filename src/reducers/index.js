@@ -29,10 +29,10 @@ const reducer = (state = initialState, action) => {
         }
       }
     case actions.LOAD_USERS_WITHDRAWAL:
-      const hasFetchedLastUpdateTime = state.price.tokens.fund.lastUpdateTime < 0
+      const hasFetchedLastUpdateTime = state.price.tokens.fund.lastUpdateTime > 0
       const newUserType = (action.hasWithdrawal ?
         (((action.withdrawal[1].lt(state.price.tokens.fund.lastUpdateTime)
-          && state.price.tokens.fund.lastUpdateTime > 0)
+          && hasFetchedLastUpdateTime)
         ) ?
           userType.WITHDRAW_ETH
           : userType.WATING_FOR_PRICE_UPDATE
@@ -118,7 +118,7 @@ const reducer = (state = initialState, action) => {
         }
       }
     case actions.UPDATE_MINUTE:
-      const inSync = (state.updateTicker.minute%60) == action.minute
+      const inSync = (state.updateTicker.minute%60) === action.minute
       const increment = inSync ? 0 : 1
       let minute
       if (action.wasUpdate){
@@ -131,7 +131,7 @@ const reducer = (state = initialState, action) => {
         minute = Math.min(60, state.updateTicker.minute + increment)
       }
 
-      if (((minute+60)%60) !== action.minute && minute != 60) // this means it is comletely out of sync (ie when it starts up)
+      if (((minute+60)%60) !== action.minute && minute !== 60) // this means it is comletely out of sync (ie when it starts up)
         minute = action.minute
 
       return {
@@ -170,8 +170,8 @@ const reducer = (state = initialState, action) => {
         transactions: {
           ...state.transactions,
           request: {
-            message: '',
             ...state.transactions.request,
+            message: '',
             state: txState.COMPLETE,
             transactionSuccess: action.transactionSuccess,
           }
@@ -185,7 +185,6 @@ const reducer = (state = initialState, action) => {
         transactions: {
           ...state.transactions,
           request: {
-            message: '',
             ...state.transactions.request,
             state: newTxState,
             message: action.message

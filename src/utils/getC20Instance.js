@@ -27,6 +27,7 @@ const getC20Instance = () => new Promise((resolve, reject) => {
     result = {
       web3: web3
     }
+
     result.web3.eth.getTransactionReceiptMined = getTransactionReceiptMined
     const contract = require('truffle-contract')
     const regulator = contract(C20Contract)
@@ -37,9 +38,8 @@ const getC20Instance = () => new Promise((resolve, reject) => {
     web3RPC.eth.getAccounts((error, accounts) => {
       result.accounts = accounts
 
-      const c20ContractAddress = (process.env.NODE_ENV === 'development') ?
-        '0x2f412497f4ec98b22c7e886af252321b01e0447b'
-        : '0x26e75307fc0c021472feb8f727839531f112f317'
+      const c20ContractAddress = (parseInt(web3.version.network, 10) === 1 ? '0x26e75307fc0c021472feb8f727839531f112f317' : '0x2f412497f4ec98b22c7e886af252321b01e0447b')
+
       return regulator.at(c20ContractAddress).then((c20Instance) => {
         result.c20Instance = c20Instance
         resolve(result)

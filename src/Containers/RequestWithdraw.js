@@ -16,14 +16,9 @@ const pow18 = new BigNumber('1000000000000000000')
 const MyInnerForm = props => {
   const {
     values,
-    touched,
     errors,
-    dirty,
-    isSubmitting,
     handleChange,
-    handleBlur,
     handleSubmit,
-    handleReset,
     user,
     maxWithdraw,
     price: {
@@ -59,7 +54,7 @@ const MyInnerForm = props => {
                   value={tokenAmount}
                   disabled={values.fullAmount}
                   onChange={e => {
-                    if (e.target.value == '') {e.target.value = 0} // prevent field from being empty
+                    if (e.target.value === '') {e.target.value = 0} // prevent field from being empty
                     handleChange(e)
                   }} />
                   <div>

@@ -1,7 +1,4 @@
 import request from 'request'
-import BigNumber from 'bignumber.js'
-
-const pow18 = new BigNumber('1000000000000000000')
 
 export const actions = {
   UPDATE_PRICE: 'UPDATE_PRICE',
@@ -74,7 +71,7 @@ export const updateUpdateTime = (c20Instance, accounts) => async dispatch => {
 
 export const loadUser = (c20Instance, accounts) => async dispatch => {
   let account
-  if (accounts[0] == null)
+  if (accounts[0] === null)
     account = '0x0000000000000000000000000000000000000000'
   else
     account = accounts[0]
@@ -122,7 +119,7 @@ export const loadUserBalance = (c20Instance, account) => dispatch =>
 
 // get the price of Ether in USD
 export const getEtherPrice = displayCurrency => dispatch =>
-  request('https://api.coinmarketcap.com/v1/ticker/ethereum/?convert=' + 'USD', (err, response, priceData) => {
+  request('https://api.coinmarketcap.com/v1/ticker/ethereum/?convert=USD', (err, response, priceData) => {
     if (err) dispatch ({
       type: actions.SAVE_ETHER_PRICE,
       wasError: true,
@@ -133,7 +130,7 @@ export const getEtherPrice = displayCurrency => dispatch =>
     dispatch ({
       type: actions.SAVE_ETHER_PRICE,
       wasError: false,
-      price: priceObj[0]['price_' + 'usd'],
+      price: priceObj[0]['price_usd'],
       price_btc: priceObj[0].price_btc,
       last_updated: priceObj[0].last_updated,
     })

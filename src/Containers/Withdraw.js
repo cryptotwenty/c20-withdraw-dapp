@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { withFormik } from 'formik'
-import Yup from 'yup'
 import { executeWithdraw } from '../actions'
 import { txState } from '../reducers/initialState'
 import BigNumber from 'bignumber.js'
@@ -15,17 +14,9 @@ const pow18 = new BigNumber('1000000000000000000')
 // Our inner form component. Will be wrapped with Formik({..})
 const MyInnerForm = props => {
   const {
-    values,
-    touched,
     errors,
-    dirty,
-    isSubmitting,
-    handleChange,
-    handleBlur,
     handleSubmit,
-    handleReset,
     user,
-    maxWithdraw,
     price: {
       tokens: {
         fund
