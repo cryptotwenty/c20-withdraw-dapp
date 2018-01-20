@@ -32,7 +32,7 @@ const MyInnerForm = props => {
   const tokenAmount = values.fullAmount ? maxWithdraw : values.tokenAmount
   const tokenDisplayAmount = tokenAmount.toFixed(2)
   const ethValue = fund.blockNum > 0 ?
-    (tokenAmount / fund.tokensPerEther).toFixed(2)
+    (tokenAmount / fund.tokensPerEther).toFixed(5)
     : <Loading size={'10px'}/>
   const fiatValue = (user.loaded && fund.blockNum > 0 && ether.last_updated > 0) ? (ethValue * ether.price).toFixed(2) : <Loading size={'10px'}/>
 

@@ -28,7 +28,7 @@ const MyInnerForm = props => {
   const withdrawAmount = user.withdrawalData.tokens.div(pow18).toNumber()
   const tokenDisplayAmount = withdrawAmount
   const ethValue = fund.blockNum > 0 ?
-    (withdrawAmount / fund.tokensPerEther).toFixed(2)
+    (withdrawAmount / fund.tokensPerEther).toFixed(5)
     : <Loading size={'10px'}/>
   const fiatValue = (user.loaded && fund.blockNum > 0 && ether.last_updated > 0) ? (ethValue * ether.price).toFixed(2) : <Loading size={'10px'}/>
 
