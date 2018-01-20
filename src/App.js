@@ -140,15 +140,23 @@ const Body = ({usersType, address, price}) => {
                   <PriceUpdateStatus updateTicker={this.props.updateTicker}/>
                   {
                     this.props.user.isWhitelistLoaded ?
-                      (this.props.user.isWhitelisted ?
-                        <Body usersType={this.props.user.userType} address={this.props.user.address} price={this.props.price}/>
-                        :
+                      (this.props.user.address === '0x0000000000000000000000000000000000000000' ?
                         <div>
-                          <h2>You have not been whitelisted.</h2>
-                          <h3>This functionality is disabled for your account.</h3>
-                          <p>Only whitelisted accounts can use this functionality.</p>
-                          <p>Please follow our KYC (know your customer) process to continue.</p>
+                          <h2>We are unable to retrieve your account details.</h2>
+                          <p>Please make sure your MetaMask is unlocked.</p>
+                          <p>You may need to refresh this page in the browser.</p>
                         </div>
+                        :
+                        (this.props.user.isWhitelisted ?
+                          <Body usersType={this.props.user.userType} address={this.props.user.address} price={this.props.price}/>
+                          :
+                          <div>
+                            <h2>You have not been whitelisted.</h2>
+                            <h3>This functionality is disabled for your account.</h3>
+                            <p>Only whitelisted accounts can use this functionality.</p>
+                            <p>Please follow our KYC (know your customer) process to continue.</p>
+                          </div>
+                        )
                       )
                       :
                       <div>
