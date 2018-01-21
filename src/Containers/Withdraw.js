@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { withFormik } from 'formik'
 import { executeWithdraw } from '../actions'
-import { txState } from '../reducers/initialState'
+import { txState, userType } from '../reducers/initialState'
 import BigNumber from 'bignumber.js'
 import Loading from '../components/Loading'
 import './toggle.css'
@@ -27,8 +27,8 @@ const MyInnerForm = props => {
 
   const withdrawAmount = user.withdrawalData.tokens.div(pow18).toNumber()
   const tokenDisplayAmount = withdrawAmount
-  const ethValue = fund.blockNum > 0 ?
-    (withdrawAmount / fund.tokensPerEther).toFixed(5)
+  const ethValue = user.withdrawalData.actualizedWithdrawPrice.numerator !== -1 ?
+    (withdrawAmount / user.withdrawalData.actualizedWithdrawPrice.tokensPerEther).toFixed(5)
     : <Loading size={'10px'}/>
   const fiatValue = (user.loaded && fund.blockNum > 0 && ether.last_updated > 0) ? (ethValue * ether.price).toFixed(2) : <Loading size={'10px'}/>
 
@@ -94,14 +94,45 @@ class Withdraw extends Component {
     // TODO:: ui: keep the background the submit screen and put text over it as an overlay.
     switch(this.props.withdrawalTx.state){
       case txState.NONE:
-        return (
-          <div className="col-sm-12">
+        if(this.props.user.userType === userType.WITHDRAW_ETH){
+          return (
+            <div className="col-sm-12">
+              <h6 style={{marginTop: 0}}>EXECUTE WITHDRAWAL TO ETH:</h6>
+              <div className="table-responsive">
+                <EnhancedForm {...formProps} withdrawFunc={withdrawFunc}/>
+              </div>
+            </div>
+          )
+        } else {
+          return <div className="col-sm-12">
             <h6 style={{marginTop: 0}}>EXECUTE WITHDRAWAL TO ETH:</h6>
             <div className="table-responsive">
-              <EnhancedForm {...formProps} withdrawFunc={withdrawFunc}/>
+              <table className="table table-bordered table-invested">
+                <tbody>
+                  <tr>
+                    <td colSpan={3} style={{whiteSpace: 'normal'}}>The amount of ether you will be able to withdraw will be calculated on the next price update after completing steps 1 and 2 above.</td>
+                  </tr>
+                  <tr>
+                    <td colSpan={3}>
+                      <button className={"btn btn-withdraw btn-primary"}>
+                        <i className="fa fa-send" />Steps 1 and 2 need to be completed to access this functionality.
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <img alt="C20 Icon" className="ccc" src="https://static.crypto20.com/images/icons/c20-alt-2-darkblue.png" />
+                    </td>
+                    <td>
+                      <i className="cc ETH" /></td><td><i className="fa fa-dollar" />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
-        )
+
+        }
       case txState.INIT:
         // TODO:: add message and button about reloading if user rejects in metamask
         return (

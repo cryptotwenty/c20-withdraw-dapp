@@ -15,11 +15,12 @@ export const actions = {
   COMPLETE_WITHDRAWAL: 'COMPLETE_WITHDRAWAL',
   RESET_WITHDRAWAL: 'RESET_WITHDRAWAL',
   INIT_SEND: 'INIT_SEND',
-  SUBMIT_SEND: 'SUBMIT_SEND',
-  COMPLETE_SEND: 'COMPLETE_SEND',
-  RESET_SEND: 'RESET_SEND',
+  // SUBMIT_SEND: 'SUBMIT_SEND',
+  // COMPLETE_SEND: 'COMPLETE_SEND',
+  // RESET_SEND: 'RESET_SEND',
   LOAD_USERS_WITHDRAWAL: 'LOAD_USERS_WITHDRAWAL',
   LOAD_USERS_WHITELIST: 'LOAD_USERS_WHITELIST',
+  SET_WITHDRAWAL_PRICE: 'SET_WITHDRAWAL_PRICE',
 }
 
 // TODO:: remove txHash, it serves no purpose
@@ -99,13 +100,25 @@ export const loadUsersWhitelist = (c20Instance, account) => dispatch =>
 export const loadUsersWithdrawal = (c20Instance, account) => dispatch =>
   c20Instance.withdrawals(account).then(withdrawal => {
     const hasWithdrawal = withdrawal[0].gt('0')
-
     dispatch({
       type: actions.LOAD_USERS_WITHDRAWAL,
       hasWithdrawal,
       withdrawal,
     })
+
+    if (hasWithdrawal) {
+      dispatch(setWithdrawalPrice(c20Instance, withdrawal[1].toNumber()))
+    }
   })
+
+export const setWithdrawalPrice = (c20Instance, withdrawalUpdateTime) => dispatch =>
+  c20Instance.prices(withdrawalUpdateTime).then(actualizedWithdrawPrice =>
+    dispatch({
+      type: actions.SET_WITHDRAWAL_PRICE,
+      actualizedWithdrawPrice,
+    })
+  )
+
 
 
 // get the users token balance
@@ -142,7 +155,7 @@ export const requestWithdraw = (c20Instance, web3, accounts, tokensToWithdraw) =
   })
   let tx
   try {
-    tx = await c20Instance.requestWithdrawal.sendTransaction(tokensToWithdraw, {from: accounts[0]})
+    tx = await c20Instance.requestWithdrawal.sendTransaction(tokensToWithdraw.toString(), {from: accounts[0]})
     dispatch({
       type: actions.SUBMIT_REQUEST,
       tx: tx

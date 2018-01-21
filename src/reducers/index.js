@@ -8,6 +8,7 @@ import {
 } from './initialState'
 
 const reducer = (state = initialState, action) => {
+  let tokensPerEther
   switch (action.type) {
     // TODO:: use sub-reducers
     case actions.SAVE_USER:
@@ -44,6 +45,7 @@ const reducer = (state = initialState, action) => {
           ...state.user,
           userType: newUserType,
           withdrawalData: {
+            ...state.user.withdrawalData,
             tokens: action.withdrawal[0],
             time: action.withdrawal[1]
           }
@@ -94,7 +96,7 @@ const reducer = (state = initialState, action) => {
       if (action.blockNum < state.price.blockNum)
         return state
 
-      const tokensPerEther = action.numerator.div(action.denominator).toNumber()
+      tokensPerEther = action.numerator.div(action.denominator).toNumber()
 
       return {
         ...state,
@@ -115,6 +117,23 @@ const reducer = (state = initialState, action) => {
         },
         updateTicker: {
           ...state.updateTicker,
+        }
+      }
+    case actions.SET_WITHDRAWAL_PRICE:
+      tokensPerEther = action.actualizedWithdrawPrice[0].div(action.actualizedWithdrawPrice[1]).toNumber()
+
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          withdrawalData: {
+            ...state.user.withdrawalData,
+            actualizedWithdrawPrice: {
+              numerator: action.actualizedWithdrawPrice[0],
+              denominator: action.actualizedWithdrawPrice[1],
+              tokensPerEther
+            },
+          }
         }
       }
     case actions.UPDATE_MINUTE:

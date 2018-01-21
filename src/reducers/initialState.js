@@ -58,6 +58,10 @@ export const initialState = {
     withdrawalData: {
       tokens: new BigNumber(0),
       time: -1,
+      actualizedWithdrawPrice: {
+        numerator: -1,
+        denominator: -1,
+      },
     }
   },
   price: {
