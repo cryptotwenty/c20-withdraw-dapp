@@ -58,7 +58,7 @@ const Step = ({number, caption}) =>
   <ul className="list-group" style={{marginBottom: '10px'}}>
     <li className="list-group-item" style={{color:'#303036', backgroundColor: '#f5f5f5', wordWrap: 'break-word'}}>
       <b>
-        <a href="/portal/invest/">
+        <a>{/*TODO:: add link to relevent help/explanation of this step*/}
           <div className="circle-small">
             <i className="fa fa-money"></i>
           </div>
