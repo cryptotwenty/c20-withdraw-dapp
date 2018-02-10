@@ -128,7 +128,7 @@ const Body = ({usersType, address, price}) => {
           {(parseInt(this.context.web3.version.network, 10)!==1) &&
             <div className="panel">
               <h1 className="ui-state-error">Warning: You are on a TEST network.</h1>
-              <h4>You will not interact with the live Cryto20 Token.</h4>
+              <h4>You will not interact with the live Crypto20 Token.</h4>
             </div>
           }
           <div className="panel">
