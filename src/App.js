@@ -32,8 +32,8 @@ const TopBar = ({price}) =>{
       <div className="col-xs-8 text-right">
         <div className="updated">updated {updatedTime} minutes ago..</div>
         <div className="price-big crypto20"></div>
-        <div className="crypto20"><img alt="C20 Icon" className="ccc" src="https://static.crypto20.com/images/icons/c20-alt-2-darkblue.png" />{totalSupply}<small>IN CIRCULATION</small></div>
-        <div className="crypto20">${marketCap}<small>MARKET CAP</small></div>
+        <div className="crypto20"><img alt="C20 Icon" className="ccc" src="https://static.crypto20.com/images/icons/c20-alt-2-darkblue.png" />{totalSupply}<small> IN CIRCULATION</small></div>
+        <div className="crypto20">${marketCap}<small> MARKET CAP</small></div>
       </div>
     </div>
   )
@@ -142,7 +142,7 @@ const Body = ({usersType, address, price}) => {
                     this.props.user.isWhitelistLoaded ?
                       (this.props.user.address === '0x0000000000000000000000000000000000000000' ?
                         <div>
-                          <h2>We are unable to retrieve your account details.</h2>
+                          <h2>We are unable to retrieve your address details.</h2>
                           <p>Please make sure your MetaMask is unlocked.</p>
                           <p>You may need to refresh this page in the browser.</p>
                         </div>
@@ -151,17 +151,17 @@ const Body = ({usersType, address, price}) => {
                           <Body usersType={this.props.user.userType} address={this.props.user.address} price={this.props.price}/>
                           :
                           <div>
-                            <h2>You have not been whitelisted.</h2>
-                            <h3>This functionality is disabled for your account.</h3>
-                            <p>Only whitelisted accounts can use this functionality.</p>
-                            <p>Please follow our KYC (know your customer) process to continue.</p>
+                            <h2>The selected address has not been whitelisted:</h2>
+                            <h4> {this.props.user.address} </h4>
+                            <h3>This functionality is disabled for the above address.</h3>
+                            <p>Only whitelisted accounts can use this functionality. Either select a different whitelisted Metamask address or verify your account and then whitelist your Metamask address.</p>
                           </div>
                         )
                       )
                       :
                       <div>
                         <h3>Loading Whitelist information</h3>
-                        <p>Only whitelisted accounts can use this functionality</p>
+                        <p>Only whitelisted accounts can use this functionality.</p>
                         <Loading size={'50px'}/>
                       </div>
                   }
