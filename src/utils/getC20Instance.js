@@ -5,10 +5,25 @@ import getTransactionReceiptMined from '../utils/getTransactionReceiptMined.js'
 
 const getC20Instance = () => new Promise((resolve, reject) => {
   // Wait for loading completion to avoid race conditions with web3 injection timing.
-  window.addEventListener('load', function() {
+  window.addEventListener('load', async() => {
+
     let result
     let web3 = window.web3
     let provider
+
+    if (window.ethereum)
+    {
+      window.web3 = new Web3(window.ethereum);
+      try {
+          // Request account access if needed
+          await window.ethereum.enable();
+          // Acccounts now exposed
+          console.log(window.ethereum);
+      } catch (error) {
+          //alert('access denied');
+          console.log('access denied');
+      }
+    }
 
     // Checking if Web3 has been injected by the browser (Mist/MetaMask)
     if (typeof web3 !== 'undefined') {

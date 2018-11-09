@@ -27,12 +27,12 @@ const TopBar = ({price}) =>{
     <div className="row">
       <div className="col-xs-4">
         <h4 className="name">CRYPTO20</h4>
-        <img alt="C20 Icon" className="c20-icon" src="https://static.crypto20.com/images/icons/c20-alt-2-darkblue.png" />
+        <img alt="C20 Icon" className="c20-icon" src="https://cdn.crypto20.com/images/icons/c20-alt-2-darkblue.png" />
       </div>
       <div className="col-xs-8 text-right">
         <div className="updated">updated {updatedTime} minutes ago..</div>
         <div className="price-big crypto20"></div>
-        <div className="crypto20"><img alt="C20 Icon" className="ccc" src="https://static.crypto20.com/images/icons/c20-alt-2-darkblue.png" />{totalSupply}<small> IN CIRCULATION</small></div>
+        <div className="crypto20"><img alt="C20 Icon" className="ccc" src="https://cdn.crypto20.com/images/icons/c20-alt-2-darkblue.png" />{totalSupply}<small> IN CIRCULATION</small></div>
         <div className="crypto20">${marketCap}<small> MARKET CAP</small></div>
       </div>
     </div>
@@ -103,7 +103,7 @@ const Body = ({usersType, address, price}) => {
     </div>
     <div className="row">
       <div className="col-xxs-6 col-xxs-push-3 col-xs-4 col-xs-push-0">
-        <img alt="C20 Icon" className="img-responsive" src="https://static.crypto20.com/images/logos/metamask.png" />
+        <img alt="C20 Icon" className="img-responsive" src="https://cdn.crypto20.com/images/logos/metamask.png" />
       </div>
       <PriceTable price={price}/>
     </div>
