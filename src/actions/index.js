@@ -132,7 +132,8 @@ export const loadUserBalance = (c20Instance, account) => dispatch =>
 
 // get the price of Ether in USD
 export const getEtherPrice = displayCurrency => dispatch =>
-  request('https://api.coinmarketcap.com/v1/ticker/ethereum/?convert=USD', (err, response, priceData) => {
+  //request('https://api.coinmarketcap.com/v1/ticker/ethereum/?convert=USD', (err, response, priceData) => {
+    request('https://api.coinmarketcap.com/v2/ticker/1027/?limit=10&structure=array&convert=BTC', (err, response, priceData) => {
     if (err) dispatch ({
       type: actions.SAVE_ETHER_PRICE,
       wasError: true,
@@ -143,9 +144,12 @@ export const getEtherPrice = displayCurrency => dispatch =>
     dispatch ({
       type: actions.SAVE_ETHER_PRICE,
       wasError: false,
-      price: priceObj[0]['price_usd'],
-      price_btc: priceObj[0].price_btc,
-      last_updated: priceObj[0].last_updated,
+      //price: priceObj[0]['price_usd'],
+      //price: priceObj[0][0]['quotes']['USD']['price'],
+      price: priceObj.data[0].quotes.USD.price,
+      //price_btc: priceObj[0].price_btc,
+      price_btc: priceObj.data[0].quotes.BTC.price,
+      last_updated: priceObj.data[0].last_updated,
     })
   })
 

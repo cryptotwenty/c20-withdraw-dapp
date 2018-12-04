@@ -1,6 +1,6 @@
 {
   "name": "crypto20-withdraw",
-  "version": "0.1.0",
+  "version": "2.1.0",
   "private": true,
   "dependencies": {
     "autoprefixer": "7.1.6",
@@ -46,7 +46,7 @@
     "sw-precache-webpack-plugin": "0.11.4",
     "truffle-contract": "^3.0.6",
     "url-loader": "0.6.2",
-    "web3": "^0.20.1",
+    "web3": "^0.20.7",
     "webpack-manifest-plugin": "1.3.2",
     "whatwg-fetch": "2.0.3",
     "yup": "^0.23.0"
