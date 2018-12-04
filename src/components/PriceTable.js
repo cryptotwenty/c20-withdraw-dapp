@@ -29,7 +29,7 @@ const PriceTable = ({price}) => {
             <tr>
               <td>C20 Total:</td>
               <td style={{display: 'flex', flexDirection: 'row'}}>
-                <img alt="C20 Icon" className="ccc" src="https://static.crypto20.com/images/icons/c20-alt-2-darkblue.png" />
+                <img alt="C20 Icon" className="ccc" src="https://cdn.crypto20.com/images/icons/c20-alt-2-darkblue.png" />
                   {c20Balance}
               </td>
             </tr>
