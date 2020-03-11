@@ -52,7 +52,7 @@ const MyInnerForm = props => {
           </tr>
           <tr>
             <td>
-              <img alt="C20 Icon" className="ccc" src="https://static.crypto20.com/images/icons/c20-alt-2-darkblue.png" />
+              <img alt="C20 Icon" className="ccc" src="https://cdn.crypto20.com/images/icons/c20-alt-2-darkblue.png" />
               {tokenDisplayAmount}
             </td>
             <td>
@@ -121,7 +121,7 @@ class Withdraw extends Component {
                   </tr>
                   <tr>
                     <td>
-                      <img alt="C20 Icon" className="ccc" src="https://static.crypto20.com/images/icons/c20-alt-2-darkblue.png" />
+                      <img alt="C20 Icon" className="ccc" src="https://cdn.crypto20.com/images/icons/c20-alt-2-darkblue.png" />
                     </td>
                     <td>
                       <i className="cc ETH" /></td><td><i className="fa fa-dollar" />

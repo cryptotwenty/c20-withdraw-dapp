@@ -5,11 +5,12 @@ import { withFormik } from 'formik'
 import Yup from 'yup'
 import { requestWithdraw } from '../actions'
 import { txState } from '../reducers/initialState'
-import BigNumber from 'bignumber.js'
+
 import Loading from '../components/Loading'
 import './toggle.css'
 
 // TODO:: Put into a constants file:
+const BigNumber = require('bignumber.js')
 const pow18 = new BigNumber('1000000000000000000')
 
 // Our inner form component. Will be wrapped with Formik({..})
@@ -84,7 +85,7 @@ const MyInnerForm = props => {
           </tr>
           <tr>
             <td>
-              <img alt="C20 Icon" className="ccc" src="https://static.crypto20.com/images/icons/c20-alt-2-darkblue.png" />
+              <img alt="C20 Icon" className="ccc" src="https://cdn.crypto20.com/images/icons/c20-alt-2-darkblue.png" />
               {tokenDisplayAmount}
             </td>
             <td>
