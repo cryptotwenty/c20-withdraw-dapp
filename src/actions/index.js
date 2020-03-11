@@ -1,4 +1,3 @@
-import request from 'request'
 
 export const actions = {
   UPDATE_PRICE: 'UPDATE_PRICE',
@@ -23,6 +22,14 @@ export const actions = {
   SET_WITHDRAWAL_PRICE: 'SET_WITHDRAWAL_PRICE',
 }
 
+let api =''
+if (process.env.REACT_APP_ENVIRONMENT === 'production') {
+  api = 'https://api.invictuscapital.com/v2/currencies/ETH/quote/USD,BTC';
+} else if (process.env.REACT_APP_ENVIRONMENT === 'staging') {
+  api = 'https://api-staging.invictuscapital.com/v2/currencies/ETH/quote/USD,BTC';
+} else {
+  api = 'https://api-dev.invictuscapital.com/v2/currencies/ETH/quote/USD,BTC';
+}
 // TODO:: remove txHash, it serves no purpose
 export const priceUpdate = (c20Instance, numerator, denominator, txHash, blockNum, accounts) => async dispatch => {
   const lastUpdateTime = await c20Instance.previousUpdateTime()
@@ -42,7 +49,6 @@ export const priceUpdate = (c20Instance, numerator, denominator, txHash, blockNu
 export const loadInitialPrice = (c20Instance, accounts) => async dispatch => {
   const currentPrice = await c20Instance.currentPrice()
   const lastUpdateTime = await c20Instance.previousUpdateTime()
-
   dispatch({
     type: actions.UPDATE_PRICE,
     numerator: currentPrice[0],
@@ -50,7 +56,7 @@ export const loadInitialPrice = (c20Instance, accounts) => async dispatch => {
     blockNum: 1, // default to 1 since only blocktime is accessible
     lastUpdateTime,
   })
-  dispatch(loadUsersWithdrawal(c20Instance, accounts[0]))
+  // dispatch(loadUsersWithdrawal(c20Instance, accounts[0]))
 }
 
 export const updateCountdownTimer = (wasUpdate = false) => ({
@@ -81,16 +87,19 @@ export const loadUser = (c20Instance, accounts) => async dispatch => {
     type: actions.SAVE_USER,
     userAddress: account
   })
-
   dispatch(loadUsersWhitelist(c20Instance, account))
-  dispatch(loadUserBalance(c20Instance, account))
-  dispatch(loadUsersWithdrawal(c20Instance, account))
+
 }
 
 
 
 export const loadUsersWhitelist = (c20Instance, account) => dispatch =>
   c20Instance.whitelist(account).then(isWhitelisted => {
+    if(isWhitelisted) {
+      dispatch(loadUserBalance(c20Instance, account))
+      dispatch(loadUsersWithdrawal(c20Instance, account))
+    }
+   
     dispatch({
       type: actions.LOAD_USERS_WHITELIST,
       isWhitelisted,
@@ -105,49 +114,54 @@ export const loadUsersWithdrawal = (c20Instance, account) => dispatch =>
       hasWithdrawal,
       withdrawal,
     })
-
     if (hasWithdrawal) {
       dispatch(setWithdrawalPrice(c20Instance, withdrawal[1].toNumber()))
     }
   })
 
 export const setWithdrawalPrice = (c20Instance, withdrawalUpdateTime) => dispatch =>
-  c20Instance.prices(withdrawalUpdateTime).then(actualizedWithdrawPrice =>
+  c20Instance.prices(withdrawalUpdateTime).then(actualizedWithdrawPrice => {
     dispatch({
       type: actions.SET_WITHDRAWAL_PRICE,
       actualizedWithdrawPrice,
     })
-  )
+  })
+  
 
 
 
 // get the users token balance
+
 export const loadUserBalance = (c20Instance, account) => dispatch =>
-  c20Instance.balanceOf(account).then(precisionBalance =>
+
+  c20Instance.balanceOf(account).then(precisionBalance =>{
+    
     dispatch ({
       type: actions.SAVE_USER_BALANCE,
       precisionBalance
     })
-  )
-
+  })
 // get the price of Ether in USD
-export const getEtherPrice = displayCurrency => dispatch =>
-  request('https://api.coinmarketcap.com/v1/ticker/ethereum/?convert=USD', (err, response, priceData) => {
-    if (err) dispatch ({
-      type: actions.SAVE_ETHER_PRICE,
-      wasError: true,
-    })
-
-    const priceObj = JSON.parse(priceData)
+export const getEtherPrice = displayCurrency => async dispatch => {
+  try {
+    let response = await fetch(api);
+    let priceData = await response.json();
 
     dispatch ({
       type: actions.SAVE_ETHER_PRICE,
       wasError: false,
-      price: priceObj[0]['price_usd'],
-      price_btc: priceObj[0].price_btc,
-      last_updated: priceObj[0].last_updated,
+      price: priceData.prices["0"].price,
+      price_btc: priceData.prices["1"].price,
     })
-  })
+
+  }catch(err) {
+    dispatch ({
+            type: actions.SAVE_ETHER_PRICE,
+            wasError: true,
+          })
+    return
+  }
+}
 
 export const requestWithdraw = (c20Instance, web3, accounts, tokensToWithdraw) => async dispatch => {
   dispatch({

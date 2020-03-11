@@ -60,12 +60,14 @@ class InstanceWrapper extends Component {
       /////
       result.web3.eth.getBlock('latest', (err, block) => {
         // -look back 2 blocks to be conservative
-        const startMonitorBlock = Math.max(0, block.number - 2)
-
-        result.c20Instance.PriceUpdate(
-          {}, { fromBlock: startMonitorBlock, toBlock: 'latest' }
-        ).watch ( (err, response) => {
-          const {
+        // console.log(result)
+        const startMonitorBlock = Math.max(0, block.number - 2)        
+        result.c20Instance.PriceUpdate({
+          fromBlock: startMonitorBlock, 
+          toBlock: 'latest'
+      }, function(error, response){ 
+        console.log(response);
+           const {
             transactionHash,
             blockNumber,
             args: {
@@ -74,12 +76,11 @@ class InstanceWrapper extends Component {
             }
           } = response
 
-          console.log('EVENT LOG(PriceUpdate):', {
-            numerator: numerator.toString(),
-            denominator: denominator.toString(),
-          })
-
-          dispatch(priceUpdate(
+        console.log('EVENT LOG(PriceUpdate):', {
+        numerator: numerator.toString(),
+        denominator: denominator.toString(),
+      })
+         dispatch(priceUpdate(
             result.c20Instance,
             numerator,
             denominator,
@@ -89,7 +90,7 @@ class InstanceWrapper extends Component {
           ))
         })
       })
-    })
+      })
   }
 
   getChildContext() {

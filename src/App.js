@@ -30,7 +30,7 @@ const TopBar = ({price}) =>{
         <img alt="C20 Icon" className="c20-icon" src="https://static.crypto20.com/images/icons/c20-alt-2-darkblue.png" />
       </div>
       <div className="col-xs-8 text-right">
-        <div className="updated">updated {updatedTime} minutes ago..</div>
+        {/* <div className="updated">updated {updatedTime} minutes ago..</div> */}
         <div className="price-big crypto20"></div>
         <div className="crypto20"><img alt="C20 Icon" className="ccc" src="https://static.crypto20.com/images/icons/c20-alt-2-darkblue.png" />{totalSupply}<small> IN CIRCULATION</small></div>
         <div className="crypto20">${marketCap}<small> MARKET CAP</small></div>
@@ -125,7 +125,7 @@ const Body = ({usersType, address, price}) => {
     render() {
       return (
         <div className="col-xs-12 col-sm-12 col-lg-8 col-lg-push-2">
-          {(parseInt(this.context.web3.version.network, 10)!==1) &&
+          {(parseInt(this.context.web3.currentProvider.networkVersion, 10)!==1) &&
             <div className="panel">
               <h1 className="ui-state-error">Warning: You are on a TEST network.</h1>
               <h4>You will not interact with the live Crypto20 Token.</h4>
