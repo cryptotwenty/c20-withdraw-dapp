@@ -21,7 +21,7 @@ const TopBar = ({price}) =>{
   // TODO:: get this from their api
   const totalSupply = 40630596.65
   const marketCap = (totalSupply / fund.tokensPerEther) * ether.price
-  const updatedTime = Math.floor(((new Date().getTime()/1000) - ether.last_updated)/60)
+  const updatedTime = Math.floor((Date.now() - ether.last_updated) / 60000)
 
   return (
     <div className="row">
