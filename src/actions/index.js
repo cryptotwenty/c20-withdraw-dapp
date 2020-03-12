@@ -132,7 +132,7 @@ export const loadUserBalance = (c20Instance, account) => dispatch =>
 
 // get the price of Ether in USD
 export const getEtherPrice = displayCurrency => dispatch =>
-  request('https://api-dev.invictuscapital.com/v2/currencies/ETH/quote/USD,BTC', (err, response, priceData) => {
+  request('https://api.invictuscapital.com/v2/currencies/ETH/quote/USD,BTC', (err, response, priceData) => {
     if (err) dispatch ({
       type: actions.SAVE_ETHER_PRICE,
       wasError: true,
